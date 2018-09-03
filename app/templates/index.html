@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/bootstrap.min.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/styles.css') }}">
+
+    </head>
+    <body>
+        <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h2>Wiki</h2>
+                </div>
+
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="#ansible" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+                        <ul class="collapse list-unstyled" id="ansible">
+                            <li><a href="#">Page 1</a></li>
+                            <li><a href="#">Page 2</a></li>
+                            <li><a href="#">Page 3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <div id="content">
+                Hallo, {{username}}
+            </div>
+        </div>
+        <script src="{{ url_for('static',filename='styles/js/jquery-3.3.1.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='styles/js/bootstrap.min.js') }}"></script>
+    </body>
+</html>

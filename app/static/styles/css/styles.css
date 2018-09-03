@@ -1,0 +1,20 @@
+#sidebar {
+    min-width: 150px;
+    max-width: 150px;
+    background: #000099;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
