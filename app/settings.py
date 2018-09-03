@@ -20,7 +20,7 @@ class Settings:
             self.createPageTree(config.get('Default', 'data_dir'), ignoring_dirs)
         except Exception as e:
             print(str(e))
-        return "kekse"
+        return self.createPageTree(data_dir)
 
     # Erstellen der Datenstruktur fuer den Seitenbaum
     def createPageTree(self, data_dir, ignoring_dirs):
@@ -30,8 +30,6 @@ class Settings:
         for (path, dirs, files) in os.walk(data_dir):
             # Ermitteln von dem relativen Pfad wenn man sich nicht im Root-Element befindet
             # Bsp.: /path/to/data/dir/site/subsite2 -> site/subsite
-
-            print "PATH: "+path
             rel_path = path[len(data_dir) + 1:]
 
             rel_path_dirs = rel_path.split('/')
