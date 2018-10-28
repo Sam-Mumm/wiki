@@ -1,0 +1,8 @@
+share
+bin
+include
+lib
+local
+app/*.pyc
+app/.idea
+app/tests/__pycache__
