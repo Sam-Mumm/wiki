@@ -18,3 +18,8 @@
     min-height: 100vh;
     transition: all 0.3s;
 }
+
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
