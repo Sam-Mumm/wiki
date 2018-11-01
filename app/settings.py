@@ -13,3 +13,6 @@ class Settings:
 
     def get_index_dir(self):
         return self.configs['index_dir']
+
+    def get_wiki_name(self):
+        return self.configs['wiki_name']
