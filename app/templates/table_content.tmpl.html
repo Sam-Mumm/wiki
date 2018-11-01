@@ -1,0 +1,36 @@
+{% extends "base.tmpl.html" %}
+
+{% block content %}
+    <table id="navi_grid" class="display">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Name</th>
+                <th>Größe</th>
+                <th>Geändert am</th>
+                <th>Erstell am</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in content %}
+                <tr>
+                    <td>
+                        {% if entry['is_dir'] == true %}
+                            [DIR]
+                        {% else %}
+                            [FILE]
+                        {% endif %}
+                    </td>
+                    <td>{{ entry['name'] }}</td>
+                    <td>
+                        {% if entry['is_dir'] != true %}
+                            {{ entry['size'] }}
+                        {% endif %}
+                    </td>
+                    <td>{{ entry['mtime'] }}</td>
+                    <td>{{ entry['ctime'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
