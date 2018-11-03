@@ -4,18 +4,17 @@ from whoosh.qparser import QueryParser
 import os, sys
 from whoosh.filedb.filestore import FileStorage
 import codecs
-from app.settings import Settings
 
 class Search:
     data_dir = None
     storage_obj = None
 
 
-    def __init__(self):
+    def __init__(self, data_dir, index_dir):
         # Get data and index-Directory from the configuration-File
         rs = Settings()
-        self.data_dir = rs.get_data_dir()
-        index_dir = rs.get_index_dir()
+        self.data_dir = data_dir
+        index_dir = index_dir
 
         # Create storage-object
         self.storage_obj = FileStorage(index_dir)
