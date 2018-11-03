@@ -25,7 +25,14 @@
                             [FILE]
                         {% endif %}
                     </td>
-                    <td><a href="#">{{ entry['name'] }}</a></td>
+                    <td>
+                        {% if entry['is_dir'] == true %}
+                            <a href="{{url_for('index')}}/{{entry['path']}}">
+                        {% else %}
+                            <a href="{{url_for('home')}}{{entry['path']}}">
+                        {% endif %}
+
+                        {{ entry['name'] }}</a></td>
                     <td>
                         {% if entry['is_dir'] != true %}
                             {{ entry['size'] }}
