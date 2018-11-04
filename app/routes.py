@@ -1,11 +1,9 @@
 from app import app
-from flask import render_template
+from flask import render_template, redirect, url_for
 import os, sys
 import markdown2
 from app.settings import Settings
 from app.navigation import Navigation
-from flaskext.markdown import Markdown
-Markdown(app)
 
 # get the Settings from wiki_config.json
 rs = Settings()
@@ -15,16 +13,41 @@ wiki_name = rs.get_wiki_name()
 # Object/Class for the navigation through the wiki content
 navi = Navigation(data_dir)
 
-@app.route('/')
-def home():
-    if os.path.exists(data_dir+"/README.md"):
-        content = markdown2.markdown_path(data_dir+"/README.md")
-    return render_template('markdown_content.tmpl.html', content=content)
+# Route for the displaying of a single page
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def home(path):
 
+    if path:
+        full_path = os.path.join(data_dir, path)
+
+        if os.path.isfile(full_path+".md"):
+            content = markdown2.markdown_path(full_path+".md", extras=["tables", "fenced-code-blocks"])
+            print content
+            return render_template('markdown_content.tmpl.html', content=content)
+        elif os.path.isdir(full_path):
+            return redirect(url_for('index'))
+
+    else:
+        if os.path.exists(data_dir+"/README.md"):
+            content = markdown2.markdown_path(data_dir+"/README.md", extras=["tables", "fenced-code-blocks"])
+            return render_template('markdown_content.tmpl.html', content=content)
+
+# route for the Navigation
 @app.route('/index', defaults={'path': ''})
 @app.route('/index/<path:path>')
 def index(path):
-    
-    content=navi.list_dir(path)
 
-    return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
+    if path:
+        full_path = os.path.join(data_dir,path)
+
+        if os.path.isdir(full_path):
+            content = navi.list_dir(path)
+            return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
+        elif os.path.isfile(full_path+".md"):
+            return redirect(url_for('home')+path)
+    else:
+        content = navi.list_dir(path)
+        return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
+
+
