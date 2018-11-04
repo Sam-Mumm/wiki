@@ -27,6 +27,8 @@ def home(path):
             return render_template('markdown_content.tmpl.html', content=content)
         elif os.path.isdir(full_path):
             return redirect(url_for('index'))
+        else:
+            return render_template('404.tmpl.html')
 
     else:
         if os.path.exists(data_dir+"/README.md"):
@@ -46,6 +48,9 @@ def index(path):
             return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
         elif os.path.isfile(full_path+".md"):
             return redirect(url_for('home')+path)
+        else:
+            return render_template('404.tmpl.html')
+
     else:
         content = navi.list_dir(path)
         return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
