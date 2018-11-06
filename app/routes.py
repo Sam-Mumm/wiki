@@ -23,7 +23,7 @@ def home(path):
 
         if os.path.isfile(full_path+".md"):
             content = markdown2.markdown_path(full_path+".md", extras=["tables", "fenced-code-blocks"])
-            print content
+
             return render_template('markdown_content.tmpl.html', content=content)
         elif os.path.isdir(full_path):
             return redirect(url_for('index'))
@@ -33,7 +33,9 @@ def home(path):
     else:
         if os.path.exists(data_dir+"/README.md"):
             content = markdown2.markdown_path(data_dir+"/README.md", extras=["tables", "fenced-code-blocks"])
-            return render_template('markdown_content.tmpl.html', content=content)
+        else:
+            content=""
+        return render_template('markdown_content.tmpl.html', content=content)
 
 # route for the Navigation
 @app.route('/index', defaults={'path': ''})
