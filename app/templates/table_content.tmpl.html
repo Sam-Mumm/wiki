@@ -50,7 +50,10 @@
         <script src="{{ url_for('static',filename='styles/js/jquery.dataTables.min.js') }}"></script>
     	<script type="text/javascript">
             $(document).ready(function() {
-			$('#navi_grid').dataTable();
+			$('#navi_grid').dataTable( {
+    			"bFilter": false,
+    			"paging": false
+			});
 		});
         </script>
 {% endblock %}

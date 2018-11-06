@@ -28,7 +28,6 @@ class Navigation:
             else:
                 continue
 
-            print dir
             if dir:
                 entry['path'] = dir+"/"+entry['name']
             else:

@@ -1,7 +1,7 @@
 import json
 
 class Settings:
-    config_file="./wiki_config.json"
+    config_file="./app/wiki_config.json"
     configs = None
 
     def __init__(self):

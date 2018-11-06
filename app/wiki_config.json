@@ -1,6 +1,6 @@
 {
 	"wiki_name": "My Wiki",
-	"data_dir": "/home/dsteffen/Dokumente/notes",
+	"data_dir": "./app/static/data",
 	"index_dir": "indexdir"
 }
 
