@@ -13,7 +13,7 @@ def caps(text):
 
     # Get the current context
     path_parts.append(path.dirname(request.path))
-    
+
     path_parts.append("/")
 
     static_path=''.join(path_parts)
