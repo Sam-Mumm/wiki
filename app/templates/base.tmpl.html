@@ -17,9 +17,6 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="{{url_for('edit')}}/mysql/passwordless_login">Index</a>
-              </li>
               {% for n in navi %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for( n['endpoint'] )}}{{ n['path'] }}">{{ n['name'] }}</a>
@@ -27,8 +24,6 @@
                 </li>
               {% endfor %}
 <!---
-
-
               <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
               </li>

@@ -23,3 +23,11 @@ body {
   min-height: 75rem;
   padding-top: 4.5rem;
 }
+
+pre {
+    border: 1px dashed #828385;
+    background-color: white !important;
+    padding-top: 6px;
+    padding-left: 11px;
+    padding-bottom: 6px;
+}
