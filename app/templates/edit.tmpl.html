@@ -4,11 +4,33 @@
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/tail.writer.css') }}">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/tail.writer.github.css') }}">
 {% endblock %}
-
 {% block content %}
-    <textarea id="article_content">
-        {{ content }}
-    </textarea>
+<form action="{{ request.url }}" method="POST">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="article_path">Pfad</label>
+                <input type="path" class="form-control" id="article_path" name="article_path" type="text" type="text" aria-describedby="article_path" value="{{ field_content.path }}">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="article_path">Kommentar</label>
+                <input type="path" class="form-control" id="article_comment" name="article_comment" type="text" aria-describedby="article_path" placeholder="Kommentar">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <textarea name="article_content" id="article_content">{{ field_content.content }}</textarea>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <input type="submit" class="form-control btn btn-success" value="Absenden">
+        </div>
+    </div>
+</form>
 {% endblock %}
 
 {% block footer %}
