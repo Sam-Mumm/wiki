@@ -10,13 +10,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="article_path">Pfad</label>
-                <input type="path" class="form-control" id="article_path" name="article_path" type="text" type="text" required aria-describedby="article_path" value="{{ field_content.path }}">
+                <input class="form-control" id="article_path" name="article_path" type="text" type="text" required aria-describedby="article_path" value="{{ field_content.path }}">
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="article_path">Kommentar</label>
-                <input type="path" class="form-control" id="article_comment" name="article_comment" type="text" aria-describedby="article_path" placeholder="Kommentar">
+                <input class="form-control" id="article_comment" name="article_comment" type="text" aria-describedby="article_path" placeholder="Kommentar">
             </div>
         </div>
     </div>
@@ -30,6 +30,7 @@
             <input type="submit" class="form-control btn btn-success" value="Absenden">
         </div>
     </div>
+    <input id="checksum" name="checksum" type="hidden" aria-describedby="checksum" value="{{ field_content.checksum }}">
 </form>
 {% endblock %}
 

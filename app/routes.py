@@ -5,6 +5,7 @@ import markdown2
 from app.settings import Settings
 from app.navigation import Navigation
 import codecs
+import hashlib
 
 # get the Settings from wiki_config.json
 rs = Settings()
@@ -58,6 +59,11 @@ def edit(path):
         # Get the content of the form fields
         content_form = request.form['article_content']
         path_form=request.form['article_path']
+        checksum_form=request.form['checksum']
+
+        # if there is no modification return to view of article
+        if checksum_form == hashlib.md5(content_form.encode('utf-8')).hexdigest():
+            return redirect(url_for("home", path=request.form['article_path']))
 
         # Create the fullpath to the article file from the form field path
         target_file_fullpath = os.path.join(data_dir, path_form + ".md")
@@ -94,7 +100,7 @@ def edit(path):
     if path != 'home' and path != 'README':
         field_content['path']=path
 
-        print article_file
+        # Error-Handling for not existing file
         if not os.path.isfile(article_file):
             return render_template('404.tmpl.html')
     else:
@@ -106,7 +112,11 @@ def edit(path):
     with codecs.open(article_file, 'r', 'utf-8') as fh:
         content = fh.read()
         field_content['content']=content
-    fh.closed
+
+        # Generate checksum of article content
+        field_content['checksum']=hashlib.md5(content.encode('utf-8')).hexdigest()
+
+        fh.closed
 
     return render_template('edit.tmpl.html', wiki_name=wiki_name, navi=navi_buttons, field_content=field_content)
 
