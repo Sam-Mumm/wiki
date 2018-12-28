@@ -4,21 +4,27 @@ import os, sys
 import markdown2
 from app.settings import Settings
 from app.navigation import Navigation
+import codecs
 
 # get the Settings from wiki_config.json
 rs = Settings()
 data_dir = rs.get_data_dir()
 wiki_name = rs.get_wiki_name()
 
-# Object/Class for the navigation through the wiki content
-navi = Navigation(data_dir)
-
-
 # route for the Navigation
 @app.route('/index', defaults={'path': ''})
 @app.route('/index/<path:path>')
 def index(path):
+    # Which Buttons should shown? (here: Create)
+    navi_buttons = [
+        {'endpoint': 'create', 'path': '', 'name': 'Erstellen'},
+    ]
+
+    # Object/Class for the navigation through the wiki content
+    navi = Navigation(data_dir)
+
     if path:
+
         full_path = os.path.join(data_dir,path)
 
         if os.path.isdir(full_path):
@@ -31,14 +37,15 @@ def index(path):
 
     else:
         content = navi.list_dir(path)
-        return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
+        return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content, navi=navi_buttons)
+
 
 # Route for editing articles
 @app.route('/edit', defaults={'path': 'home'}, methods=["GET","POST"])
 @app.route('/edit/<path:path>', methods=["GET","POST"])
 def edit(path):
-    # Which Buttons should shown? (Index)
-    navi = [
+    # Which Buttons should shown? (here: Index)
+    navi_buttons = [
         {'endpoint': 'index', 'path': '', 'name': 'Index'},
     ]
 
@@ -46,19 +53,45 @@ def edit(path):
 
     article_file = os.path.join(data_dir, path+".md")
 
+    # Processing after submit
     if request.method == 'POST':
-        content = request.form['article_content']
+        # Get the content of the form fields
+        content_form = request.form['article_content']
+        path_form=request.form['article_path']
 
-        if request.form['article_path'] == "home":
+        # Create the fullpath to the article file from the form field path
+        target_file_fullpath = os.path.join(data_dir, path_form + ".md")
+
+        if path_form == "home":
             article_file=data_dir + "/README.md"
+        else:
+            # Was the article-file moved?
+            if path != path_form:
 
-        with open(article_file, 'w') as fh:
-            fh.write(content)
+                # Did a target with the same name already exists?
+                if os.path.isfile(target_file_fullpath):
+                    error_msg="Datei existiert im Zielverzeichnis, es wurden nur die Aenderungen an Ursprungsort gespeichert"
+                # Did the target directory NOT exists?
+                elif not os.path.isdir(os.path.dirname(target_file_fullpath)):
+                    # Try to create new target directory
+                    try:
+                        os.makedirs(os.path.dirname(target_file_fullpath))
+                        article_file = target_file_fullpath
+                    except OSError as e:
+                        error_msg="Das Verzeichnis konnte nicht erstellt werden, speichere Datei am urspruenglichen Ort"
+                # Did the target-directory exists and did not exists a file with the same name?
+                elif not os.path.isfile(target_file_fullpath) and os.path.isdir(os.path.dirname(target_file_fullpath)):
+                    article_file = target_file_fullpath
+
+        # Write to file
+        with codecs.open(article_file, 'w', 'utf-8') as fh:
+            fh.write(content_form)
             fh.closed
 
-        return redirect(url_for(request.form['article_path']))
+        # Redirect to the new updated article
+        return redirect(url_for("home", path=request.form['article_path']))
 
-    if path != 'home':
+    if path != 'home' and path != 'README':
         field_content['path']=path
 
         print article_file
@@ -69,12 +102,13 @@ def edit(path):
         if os.path.exists(data_dir + "/README.md"):
             article_file=data_dir + "/README.md"
 
-    with open(article_file, 'r') as fh:
-        content = fh.read().decode('utf8')
+    # Read from article file
+    with codecs.open(article_file, 'r', 'utf-8') as fh:
+        content = fh.read()
         field_content['content']=content
     fh.closed
 
-    return render_template('edit.tmpl.html', wiki_name=wiki_name, navi=navi, field_content=field_content)
+    return render_template('edit.tmpl.html', wiki_name=wiki_name, navi=navi_buttons, field_content=field_content)
 
 
 # Route for displaying of a single page
@@ -82,17 +116,18 @@ def edit(path):
 @app.route('/<path:path>')
 def home(path):
     # Which Buttons should shown? (Edit, Index)
-    navi = [
+    navi_buttons = [
         {'endpoint': 'index', 'path': '', 'name': 'Index'},
         {'endpoint': 'edit', 'path': "/" + path, 'name': 'Bearbeiten'}
     ]
+
     if path != 'home':
         full_path = os.path.join(data_dir, path)
 
         if os.path.isfile(full_path+".md"):
             content = markdown2.markdown_path(full_path+".md", extras=["tables", "fenced-code-blocks"])
 
-            return render_template('markdown_content.tmpl.html', content=content, navi=navi)
+            return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
         elif os.path.isdir(full_path):
             return redirect(url_for('index'))
         else:
@@ -102,4 +137,10 @@ def home(path):
             content = markdown2.markdown_path(data_dir+"/README.md", extras=["tables", "fenced-code-blocks"])
         else:
             content=""
-        return render_template('markdown_content.tmpl.html', content=content, navi=navi)
+        return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
+
+# Route for editing articles
+@app.route('/create', defaults={'path': ''}, methods=["GET","POST"])
+@app.route('/create/<path:path>', methods=["GET","POST"])
+def create(path):
+    return render_template('404.tmpl.html')
