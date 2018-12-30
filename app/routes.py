@@ -58,36 +58,34 @@ def edit(path):
     if request.method == 'POST':
         # Get the content of the form fields
         content_form = request.form['article_content']
-        path_form=request.form['article_path']
+        path_form=request.form['article_path'].strip("/")
         checksum_form=request.form['checksum']
 
-        # if there is no modification return to view of article
+        # Redirect back to the view if there is no modification
         if checksum_form == hashlib.md5(content_form.encode('utf-8')).hexdigest():
-            return redirect(url_for("home", path=request.form['article_path']))
-
-        # Create the fullpath to the article file from the form field path
-        target_file_fullpath = os.path.join(data_dir, path_form + ".md")
+            return redirect(url_for("home", path=path))
 
         if path_form == "home":
-            article_file=data_dir + "/README.md"
+            article_file=os.path.join(data_dir, "README.md")
         else:
-            # Was the article-file moved?
-            if path != path_form:
+            # Create the fullpath to the article file from the form field path
+            article_file = os.path.join(data_dir, path_form + ".md")
 
-                # Did a target with the same name already exists?
-                if os.path.isfile(target_file_fullpath):
-                    error_msg="Datei existiert im Zielverzeichnis, es wurden nur die Aenderungen an Ursprungsort gespeichert"
-                # Did the target directory NOT exists?
-                elif not os.path.isdir(os.path.dirname(target_file_fullpath)):
-                    # Try to create new target directory
-                    try:
-                        os.makedirs(os.path.dirname(target_file_fullpath))
-                        article_file = target_file_fullpath
-                    except OSError as e:
-                        error_msg="Das Verzeichnis konnte nicht erstellt werden, speichere Datei am urspruenglichen Ort"
-                # Did the target-directory exists and did not exists a file with the same name?
-                elif not os.path.isfile(target_file_fullpath) and os.path.isdir(os.path.dirname(target_file_fullpath)):
-                    article_file = target_file_fullpath
+        # Was the article-file moved?
+        if path != path_form:
+            # Did a target with the same name already exists?
+            if os.path.isfile(article_file):
+                error_msg = "Datei existiert im Zielverzeichnis, es wurden nur die Aenderungen an Ursprungsort gespeichert"
+
+                article_file = os.path.join(data_dir, path + ".md")
+            # Did the target directory NOT exists?
+            elif not os.path.isdir(os.path.dirname(article_file)):
+                # Try to create new target directory
+                try:
+                    os.makedirs(os.path.dirname(article_file))
+                except OSError as e:
+                    error_msg = "Das Verzeichnis konnte nicht erstellt werden, speichere Datei am urspruenglichen Ort"
+                    article_file = os.path.join(data_dir, path+".md")
 
         # Write to file
         with codecs.open(article_file, 'w', 'utf-8') as fh:
@@ -95,7 +93,7 @@ def edit(path):
             fh.closed
 
         # Redirect to the new updated article
-        return redirect(url_for("home", path=request.form['article_path']))
+        return redirect(url_for("home", path=path_form))
 
     if path != 'home' and path != 'README':
         field_content['path']=path
@@ -149,8 +147,45 @@ def home(path):
             content=""
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
 
-# Route for editing articles
-@app.route('/create', defaults={'path': ''}, methods=["GET","POST"])
-@app.route('/create/<path:path>', methods=["GET","POST"])
-def create(path):
-    return render_template('404.tmpl.html')
+# Route for creating new articles
+@app.route('/create', methods=["GET","POST"])
+def create():
+    navi_buttons = [
+        {'endpoint': 'index', 'path': '', 'name': 'Index'},
+    ]
+
+    if request.method == 'POST':
+        # Get the content of the form fields
+        content_form = request.form['article_content']
+        path_form=request.form['article_path'].strip("/")
+
+        field_content = {}
+
+        if path_form == "home":
+            article_file=os.path.join(data_dir, "README.md")
+        else:
+            # Create the fullpath to the article file from the form field path
+            article_file = os.path.join(data_dir, path_form + ".md")
+
+        field_content['content'] = content_form;
+        field_content['path'] = path_form
+
+        # Did a target with the same name already exists?
+        if os.path.isfile(article_file):
+            error_msg = "Datei existiert im Zielverzeichnis, es wurden nur die Aenderungen an Ursprungsort gespeichert"
+            return render_template('edit.tmpl.html', wiki_name=wiki_name, navi=navi_buttons, field_content=field_content)
+        # Did the target directory NOT exists?
+        elif not os.path.isdir(os.path.dirname(article_file)):
+            # Try to create new target directory
+            try:
+                os.makedirs(os.path.dirname(article_file))
+            except OSError as e:
+                error_msg = "Das Verzeichnis konnte nicht erstellt werden"
+                return render_template('edit.tmpl.html', wiki_name=wiki_name, navi=navi_buttons, field_content=field_content)
+
+        with codecs.open(article_file, 'w', 'utf-8') as fh:
+            fh.write(content_form)
+            fh.closed
+        return redirect(url_for("home", path=path_form))
+
+    return render_template('create.tmpl.html', wiki_name=wiki_name, navi=navi_buttons)
