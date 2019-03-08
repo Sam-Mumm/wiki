@@ -1,8 +1,16 @@
 from flask import Flask
+from uuid import uuid4
+from app.views.view import pages_view
+from app.views.index import pages_index
+from app.views.edit import pages_edit
 
 app = Flask(__name__)
-app.url_map.strict_slashes = False
-app.static_folder = 'static'
+app.config.from_pyfile('settings.py', silent=True)
 
-from app import routes
-from filters import caps
+app.secret_key = str(uuid4())
+
+app.register_blueprint(pages_view)
+
+app.register_blueprint(pages_index)
+
+app.register_blueprint(pages_edit)

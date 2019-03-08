@@ -1,18 +1,7 @@
-import json
+WIKI_NAME = "My Wiki"
 
-class Settings:
-    config_file="./app/wiki_config.json"
-    configs = None
+DATA_DIR = "./app/static/data"
 
-    def __init__(self):
-        with open(self.config_file) as f:
-            self.configs = json.load(f)
+INDEX_DIR = "indexdir"
 
-    def get_data_dir(self):
-        return self.configs['data_dir']
-
-    def get_index_dir(self):
-        return self.configs['index_dir']
-
-    def get_wiki_name(self):
-        return self.configs['wiki_name']
+SECRET = "Development Key"

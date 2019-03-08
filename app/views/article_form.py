@@ -1,0 +1,9 @@
+from flask_wtf import FlaskForm
+from wtforms import TextField, TextAreaField, SubmitField
+
+
+class ArticleForm(FlaskForm):
+    path = TextField("Pfad", render_kw={"size": 45})
+    comment = TextField("Kommentar", render_kw={"size": 40})
+    submit = SubmitField("Abschicken")
+    article_content = TextAreaField("content", render_kw={"rows": 25, "cols": 100})

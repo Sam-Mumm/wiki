@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8" />
 
-        <title>{{ wiki_name }}</title>
+        <title></title>
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/bootstrap.min.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/styles.css') }}">
 
@@ -11,7 +11,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-          <a class="navbar-brand" href="{{url_for('home')}}">Wiki</a>
+          <a class="navbar-brand" href="{{url_for('pages_view.home')}}">Wiki</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -20,7 +20,6 @@
               {% for n in navi %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for( n['endpoint'] )}}{{ n['path'] }}">{{ n['name'] }}</a>
-
                 </li>
               {% endfor %}
 <!---

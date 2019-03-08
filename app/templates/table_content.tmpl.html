@@ -12,7 +12,7 @@
                 <th>Name</th>
                 <th>Größe</th>
                 <th>Geändert am</th>
-                <th>Erstell am</th>
+                <th>Erstellt am</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +27,9 @@
                     </td>
                     <td>
                         {% if entry['is_dir'] == true %}
-                            <a href="{{url_for('index')}}/{{entry['path']}}">
+                            <a href="{{url_for('pages_index.index')}}/{{entry['path']}}">
                         {% else %}
-                            <a href="{{url_for('home')}}{{entry['path']}}">
+                            <a href="{{url_for('pages_view.home')}}{{entry['path']}}">
                         {% endif %}
 
                         {{ entry['name'] }}</a></td>
