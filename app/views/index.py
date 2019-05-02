@@ -13,7 +13,6 @@ def list_dir(data_dir, dir):
     full_path = os.path.join(data_dir, dir)
 
     for e in os.listdir(full_path):
-        print e
         full_entry = os.path.join(data_dir, dir, e)
 
         entry = {'name': None, 'isdir': None, 'path': None, 'size': None, 'mtime': None, 'ctime': None}
@@ -45,11 +44,10 @@ def list_dir(data_dir, dir):
 @pages_index.route('/index/<path:path>')
 def index(path):
     # Which Buttons should shown? (here: Create)
-#    navi_buttons = [
-#        {'endpoint': 'create', 'path': '', 'name': 'Erstellen'},
-#    ]
+    navi_buttons = [
+        {'endpoint': 'pages_create.create', 'path': '', 'name': 'Erstellen'},
+    ]
 
-    navi_buttons = []
     data_dir=current_app.config['DATA_DIR']
     wiki_name=current_app.config['WIKI_NAME']
 
@@ -59,8 +57,8 @@ def index(path):
         # Existiert das in der URL referenzierte Verzeichnis im Daten-Verzeichnis
         if os.path.isdir(full_path):
             content = list_dir(data_dir, path)
-            return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content)
-        # Referenziert der Eintrag in der URL auf eine Datei?
+            return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content, navi=navi_buttons)
+        # Referenziert der Eintrag in der URL auf eine Datei auf root-Ebene?
         elif os.path.isfile(full_path+".md"):
             return redirect(url_for('home')+path)
         else:

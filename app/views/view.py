@@ -9,12 +9,11 @@ pages_view = Blueprint("pages_view", __name__)
 @pages_view.route('/<path:path>')
 def home(path):
     # Which Buttons should shown? (Edit, Index)
-#    navi_buttons = [
-#        {'endpoint': 'index', 'path': '', 'name': 'Index'},
-#        {'endpoint': 'edit', 'path': "/" + path, 'name': 'Bearbeiten'}
-#    ]
+    navi_buttons = [
+        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'},
+        {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
+    ]
 
-    navi_buttons = []
     data_dir=current_app.config['DATA_DIR']
 
     if path != 'home':

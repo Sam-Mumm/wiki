@@ -7,8 +7,6 @@ def read_article(path):
     content="Lorem ipsum"
     template="kekse"
     return content, template
-#    return "Lorem ipsum"
-
 
 
 @pages_edit.route('/edit', defaults={'path': 'home'}, methods=["GET","POST"])
@@ -19,11 +17,11 @@ def edit(path):
 
     # Which Buttons should shown? (here: Index)
     navi_buttons = [
-        {'endpoint': 'page_index.index', 'path': '', 'name': 'Index'},
+        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'},
     ]
 
     content, template=read_article(path)
     form.article_content.data=content
-    form.path.data=template
+    form.path.data=path
 
-    return render_template('article_form.tmpl.html', form=form)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons)
