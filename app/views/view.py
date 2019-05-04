@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, redirect, url_for
 import os, sys
-import markdown2
+#from data_handler_file import DataHandlerFile
+from file_io import readMarkDown
 
 pages_view = Blueprint("pages_view", __name__)
 
@@ -16,20 +17,23 @@ def home(path):
 
     data_dir=current_app.config['DATA_DIR']
 
+    start_site=current_app.config['START_SITE']
+
+
     if path != 'home':
         full_path = os.path.join(data_dir, path)
 
         if os.path.isfile(full_path+".md"):
-            content = markdown2.markdown_path(full_path+".md", extras=["tables", "fenced-code-blocks"])
+            content = readMarkDown(full_path+".md")
 
             return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
         elif os.path.isdir(full_path):
-            return redirect(url_for('index'))
+            return redirect(url_for('pages_index.index')+"/"+path)
         else:
             return render_template('404.tmpl.html')
     else:
-        if os.path.exists(data_dir+"/README.md"):
-            content = markdown2.markdown_path(data_dir+"/README.md", extras=["tables", "fenced-code-blocks"])
+        if os.path.exists(data_dir+"/"+start_site):
+            content = readMarkDown(data_dir+"/"+start_site)
         else:
             content=""
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
