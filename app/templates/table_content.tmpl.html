@@ -51,8 +51,27 @@
     	<script type="text/javascript">
             $(document).ready(function() {
 			$('#navi_grid').dataTable( {
+                "order": [[ 1, "asc" ]],
     			"bFilter": false,
-    			"paging": false
+    			"paging": false,
+                "columnDefs": [
+                            {
+                                "render": function ( data, type, row ) {
+                                    if(data == "[DIR]") {
+                                        return '<img src="{{ url_for('static', filename='styles/images/folder.png') }}" />';
+                                    }
+                                    else {
+                                        return '<img src="{{ url_for('static', filename='styles/images/file.png') }}" />';
+                                    }
+                                },
+                                "targets": 0,
+                                "className": 'dt-body-center',
+                                "width": '26px'
+                             }
+
+                        ]
+
+
 			});
 		});
         </script>
