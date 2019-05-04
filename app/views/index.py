@@ -21,19 +21,14 @@ def list_dir(data_dir, dir):
         if os.path.isdir(full_entry) and not e==".git":
             entry['is_dir'] = True
             entry['name'] = e
-        elif e.endswith('.md'):
+            entry['path'] = os.path.join(dir, e)
+        elif os.path.isfile(full_entry) and e.endswith('.md'):
             entry['size'] = os.path.getsize(full_entry)
             entry['name'] = e[:-3]
+            entry['path'] = os.path.join(dir, e[:-3])
         else:
             continue
 
-        # Wurde ein Verzeichnis uebergeben (= Inhalt von einem Unterverzeichnis auflisten)
-        if dir:
-            entry['path'] = os.path.join(dir, e[:-3])
-        else:
-            entry['path'] = entry['name']
-
-        #
         entry['mtime'] = datetime.fromtimestamp(os.path.getmtime(full_entry)).strftime('%Y-%m-%d %H:%M')
         entry['ctime'] = datetime.fromtimestamp(os.path.getctime(full_entry)).strftime('%Y-%m-%d %H:%M')
 

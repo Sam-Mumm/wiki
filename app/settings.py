@@ -5,3 +5,5 @@ DATA_DIR = "./app/static/data"
 INDEX_DIR = "indexdir"
 
 SECRET = "Development Key"
+
+START_SITE = "README.md"
