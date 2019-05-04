@@ -1,15 +1,15 @@
-from app import app
-import flask
-from flask import request
+from flask import Blueprint, current_app, request, url_for
 import re
 from os import path
 
-@app.template_filter()
-def caps(text):
+fix_images = Blueprint("fix_images", __name__)
+
+@fix_images.app_template_filter()
+def fix_images(text):
     path_parts=[]
 
     # Get the Path to the data-dir
-    path_parts.append(flask.url_for('static',filename='data'))
+    path_parts.append(url_for('static',filename='data'))
 
     # Get the current context
     path_parts.append(path.dirname(request.path))
