@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app, request
-from article_form import ArticleForm
-from file_io import readRaw
+from .article_form import ArticleForm
+from .file_io import readRaw
 import hashlib
 import os, sys
 

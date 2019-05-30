@@ -20,6 +20,5 @@ app.register_blueprint(pages_edit)
 
 app.register_blueprint(pages_create)
 
-#app.jinja_env.filters['fix_images'] = jinja_filters.fix_images
-app.jinja_env.filters['fix_images'] = fix_images
+app.jinja_env.filters['fix_images'] = jinja_filters.fix_images
 

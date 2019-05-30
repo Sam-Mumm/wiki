@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, current_app
-from article_form import ArticleForm
+from .article_form import ArticleForm
 
 pages_create = Blueprint("pages_create", __name__)
 

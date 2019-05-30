@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, request, url_for
 import re
 from os import path
 
-fix_images = Blueprint("fix_images", __name__)
+fix_images = Blueprint("fix_images", __name__, template_folder='templates')
 
 @fix_images.app_template_filter()
 def fix_images(text):

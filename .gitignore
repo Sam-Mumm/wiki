@@ -2,7 +2,9 @@ share
 bin
 include
 lib
+lib64
 local
+pyvenv.cfg
 **.pyc
 **.idea
 app/tests/__pycache__
