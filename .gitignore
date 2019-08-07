@@ -8,4 +8,3 @@ pyvenv.cfg
 **.pyc
 **.idea
 app/tests/__pycache__
-app/static/data
