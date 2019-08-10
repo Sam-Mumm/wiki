@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve project
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/opt/wiki
+Environment="PATH=/opt/wiki/bin"
+ExecStart=/opt/wiki/bin/uwsgi --ini wsgi.ini
+
+[Install]
+WantedBy=multi-user.target
