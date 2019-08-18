@@ -1,17 +1,20 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for
 from .article_form import ArticleForm
-from .file_io import readRaw, updateArticle
-import hashlib
+from .file_io import readRaw, updateArticle, moveArticle
 import os, sys
 
 pages_edit = Blueprint("pages_edit", __name__)
 
 # Pruefung und speichern der Aenderunngen nach dem absenden von dem Formular
-def store_article(data_dir, origin_path, content, path):
-    article_file = os.path.join(data_dir, path + ".md")
+def store_article(data_dir, origin_path, content, new_path):
+    new_article_file = os.path.join(data_dir, new_path + ".md")
 
-    if origin_path == path:
-        updateArticle(article_file, content)
+    if origin_path == new_path:
+        writeRaw(new_article_file, content)
+    else:
+        origin_article_file = os.path.join(data_dir, origin_path + ".md")
+
+        moveArticle(origin_article_file, new_article_file, content)
 
     return True
 
