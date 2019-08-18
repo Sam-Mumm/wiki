@@ -7,5 +7,8 @@ def readMarkDown(path):
 def readRaw(path):
     with codecs.open(path, 'r', 'utf-8') as fh:
         content = fh.read()
-    fh.closed
     return content
+
+def updateArticle(path, content):
+    with codecs.open(path, 'w', 'utf-8') as fh:
+        fh.write(content)
