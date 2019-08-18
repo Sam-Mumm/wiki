@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for
 from .article_form import ArticleForm
-from .file_io import readRaw, updateArticle, moveArticle
+from .file_io import readRaw, writeRaw, moveArticle
 import os, sys
 
 pages_edit = Blueprint("pages_edit", __name__)
@@ -17,7 +17,6 @@ def store_article(data_dir, origin_path, content, new_path):
         moveArticle(origin_article_file, new_article_file, content)
 
     return True
-
 
 
 @pages_edit.route('/edit', defaults={'path': 'home'}, methods=["GET","POST"])
@@ -37,7 +36,7 @@ def edit(path):
     # Wurde der Speicher-Button gedrueckt?
     if request.method == 'POST':
         form_content = request.form['article_content']
-        form_path = request.form['path']
+        form_path = request.form['path'].replace(" ", "_")
 #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
         # Konnte die Datei erfolgreich gespeichert werden?
