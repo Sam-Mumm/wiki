@@ -10,7 +10,12 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ form.path.label }}
-                {{ form.path }}
+
+                {% if form.path.data == 'home' %}
+                    {{ form.path(disabled=True) }}
+                {% else %}
+                    {{ form.path }}
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6">
