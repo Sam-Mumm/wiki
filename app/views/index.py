@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, redirect, url_for
 import os, sys
 import markdown2
 from datetime import datetime
@@ -55,7 +55,7 @@ def index(path):
             return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content, navi=navi_buttons)
         # Referenziert der Eintrag in der URL auf eine Datei auf root-Ebene?
         elif os.path.isfile(full_path+".md"):
-            return redirect(url_for('home')+path)
+            return redirect(url_for('pages_view.home')+path)
         else:
             return render_template('404.tmpl.html')
 
