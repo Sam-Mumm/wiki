@@ -38,9 +38,14 @@ def list_dir(data_dir, dir):
 @pages_index.route('/index', defaults={'path': ''})
 @pages_index.route('/index/<path:path>')
 def index(path):
-    # Which Buttons should shown? (here: Create)
+
+    if path!='':
+        create_path="/"+path
+    else:
+        create_path=''
+
     navi_buttons = [
-        {'endpoint': 'pages_create.create', 'path': '', 'name': 'Erstellen'},
+        {'endpoint': 'pages_create.create', 'path': create_path, 'name': 'Erstellen'},
     ]
 
     data_dir=current_app.config['DATA_DIR']
