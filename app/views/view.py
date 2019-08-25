@@ -10,8 +10,7 @@ pages_view = Blueprint("pages_view", __name__)
 def home(path):
     # Which Buttons should shown? (Edit, Index)
     navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'},
-        {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
+        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'}
     ]
 
     data_dir=current_app.config['DATA_DIR']
@@ -19,9 +18,15 @@ def home(path):
     start_site=current_app.config['START_SITE']
 
     if path != 'home':
+
         full_path = os.path.join(data_dir, path)
 
         if os.path.isfile(full_path+".md"):
+
+            navi_buttons.append(
+                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
+            )
+
             content = readMarkDown(full_path+".md")
 
             return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
@@ -30,8 +35,17 @@ def home(path):
         else:
             return render_template('404.tmpl.html')
     else:
-        if os.path.exists(data_dir+"/"+start_site):
-            content = readMarkDown(data_dir+"/"+start_site)
+        start_site_full_path = os.path.join(data_dir, start_site)
+
+        if os.path.exists(start_site_full_path):
+            content = readMarkDown(start_site_full_path)
+            navi_buttons.append(
+                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
+            )
         else:
+            navi_buttons.append(
+                {'endpoint': 'pages_create.create', 'path': "", 'name': 'Erstellen'}
+            )
+
             content=""
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
