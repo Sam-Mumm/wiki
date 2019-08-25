@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for
 from .article_form import ArticleForm
-from .file_io import readRaw, writeRaw, moveArticle
+from .file_io import readRaw, updateArticle, moveArticle
 import os, sys
 
 pages_edit = Blueprint("pages_edit", __name__)
@@ -9,8 +9,10 @@ pages_edit = Blueprint("pages_edit", __name__)
 def store_article(data_dir, origin_path, content, new_path):
     new_article_file = os.path.join(data_dir, new_path + ".md")
 
+    print("origin: "+origin_path)
+    print("new_path"+new_path)
     if origin_path == new_path:
-        writeRaw(new_article_file, content)
+        updateArticle(new_article_file, content)
     else:
         origin_article_file = os.path.join(data_dir, origin_path + ".md")
 
@@ -36,12 +38,20 @@ def edit(path):
     # Wurde der Speicher-Button gedrueckt?
     if request.method == 'POST':
         form_content = request.form['article_content']
-        form_path = request.form['path'].replace(" ", "_")
+
+        if 'path' in request.form:
+            form_path = request.form['path'].replace(" ", "_").strip(os.path.sep)
+            redirect_path=form_path
+        else:
+            redirect_path=""
+            form_path = "README"
+            path=form_path
+
 #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
         # Konnte die Datei erfolgreich gespeichert werden?
         if store_article(data_dir, path, form_content, form_path):
-            return redirect(url_for('pages_view.home') + form_path)
+            return redirect(url_for('pages_view.home') + redirect_path)
 
     # Ist die zu bearbeitende Seite die Startseite?
     if path != 'home':
