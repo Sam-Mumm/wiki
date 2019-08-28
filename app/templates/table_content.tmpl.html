@@ -60,7 +60,7 @@
                                     if(data == "[DIR]") {
                                         return '<img src="{{ url_for('static', filename='styles/images/folder.png') }}" />';
                                     }
-                                    else {
+                                    else if(data == "[FILE]") {
                                         return '<img src="{{ url_for('static', filename='styles/images/file.png') }}" />';
                                     }
                                 },
