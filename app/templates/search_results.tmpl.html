@@ -1,0 +1,9 @@
+{% extends "base.tmpl.html" %}
+
+{% block content %}
+    {{ search_msg }}
+
+    {% for r in results %}
+        <a href="{{ r.path }}">gnarf</a><br/><br/>
+    {% endfor %}
+{% endblock %}

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, request
+from flask import Blueprint, render_template, current_app, request, redirect, url_for
 from whoosh.fields import *
 import whoosh.index
 from whoosh.qparser import QueryParser
@@ -38,3 +38,31 @@ def refresh_search_db():
                 content = f.read()
                 writer.add_document(path=article_path, content=content)
     writer.commit()
+
+
+@pages_search.route('/search', methods=["POST", "GET"])
+def search():
+    if request.method != 'POST':
+        return redirect(url_for('pages_view.home'))
+
+    navi_buttons = [
+        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'}
+    ]
+
+    index_dir = current_app.config['INDEX_DIR']
+
+    search_str = request.form['search']
+
+    storage_obj = FileStorage(os.path.abspath(index_dir))
+
+    try:
+        idx=storage_obj.open_index()
+    except whoosh.index.EmptyIndexError:
+        refresh_search_db
+        idx=storage_obj.open_index()
+
+    query_obj=QueryParser("content", idx.schema).parse(search_str)
+    searcher = idx.searcher()
+    results = searcher.search(query_obj)
+
+    return render_template('search_results.tmpl.html', results=results, navi=navi_buttons)
