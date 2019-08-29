@@ -2,8 +2,12 @@
 
 {% block content %}
     {{ search_msg }}
+    <br/>
+    <br/>
 
     {% for r in results %}
-        <a href="{{ r.path }}">gnarf</a><br/><br/>
+        <a href="{{ r.path }}">{{ r.path }}</a><br/>
+        {{ r.content }}
+        <br/><br/>
     {% endfor %}
 {% endblock %}

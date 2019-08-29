@@ -42,12 +42,16 @@ def refresh_search_db():
 
 @pages_search.route('/search', methods=["POST", "GET"])
 def search():
-    if request.method != 'POST':
-        return redirect(url_for('pages_view.home'))
+    results = []
+    results_tmpl = []
 
     navi_buttons = [
         {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'}
     ]
+
+    if request.method != 'POST':
+        msg = "Es wurde kein Suchbegriff angegeben"
+        return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons)
 
     index_dir = current_app.config['INDEX_DIR']
 
@@ -65,4 +69,19 @@ def search():
     searcher = idx.searcher()
     results = searcher.search(query_obj)
 
-    return render_template('search_results.tmpl.html', results=results, navi=navi_buttons)
+    if len(results) == 0:
+        msg = "Es gab fuer den Suchstring "+search_str+" keine Treffer"
+        return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons)
+
+    msg = "Es wurden "+str(len(results))+" Treffer fuer die Suchanfrage "+search_str+" gefunden"
+    # Aufbereitung der Daten
+    for r in results:
+        hit = {}
+
+        hit['path']="/".join(os.path.normpath(r['path']).split(os.path.sep)[3:])
+        hit['content']=r['content']
+
+        results_tmpl.append(hit)
+
+
+    return render_template('search_results.tmpl.html', search_msg=msg, results=results_tmpl, navi=navi_buttons)
