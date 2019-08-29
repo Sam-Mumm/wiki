@@ -19,7 +19,7 @@ def home(path):
 
     if path != 'home':
 
-        full_path = os.path.join(data_dir, path)
+        full_path = os.path.join(data_dir, os.path.splitext(path)[0])
 
         if os.path.isfile(full_path+".md"):
 
