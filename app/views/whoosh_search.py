@@ -4,6 +4,9 @@ from whoosh.qparser import QueryParser
 import os, sys, shutil
 from whoosh.filedb.filestore import FileStorage
 import codecs
+#import whoosh
+from whoosh.highlight import ContextFragmenter
+
 
 def create_index(index_dir, data_dir):
     index_dir_absolute = os.path.abspath(index_dir)
@@ -58,6 +61,8 @@ def search_index(search_str, index_dir, data_dir):
     searcher = idx.searcher()
     results = searcher.search(query_obj)
 
+    results.fragmenter = whoosh.highlight.ContextFragmenter(surround=20)
+
     if len(results) == 0:
         msg = "Es gab fuer den Suchstring "+search_str+" keine Treffer"
         return msg, result_set
@@ -67,8 +72,7 @@ def search_index(search_str, index_dir, data_dir):
         hit = {}
 
         hit['path'] = "/".join(os.path.normpath(r['path']).split(os.path.sep)[3:])
-        hit['content'] = r['content']
-
+        hit['content'] = r.highlights("content")
         result_set.append(hit)
 
     return msg, result_set
@@ -109,4 +113,3 @@ def update_document_index(index_dir, data_dir, origin_path, new_path, content):
         writer.delete_by_term('path', origin_path)
         writer.add_document(path=new_path, content=content)
     writer.commit()
-
