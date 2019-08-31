@@ -83,12 +83,30 @@ def add_document_index(index_dir, data_dir, path, content):
     except whoosh.index.EmptyIndexError:
         create_index(index_dir, data_dir)
         idx=storage_obj.open_index()
-        return True
 
     writer = idx.writer()
     writer.add_document(path=path, content=content)
     writer.commit()
+    return True
 
 
+def update_document_index(index_dir, data_dir, origin_path, new_path, content):
+    index_dir_absolute = os.path.abspath(index_dir)
+    storage_obj = FileStorage(index_dir_absolute)
 
-#def update_document_index(index_dir, data_dir, path, content)
+    try:
+        idx=storage_obj.open_index()
+    except whoosh.index.EmptyIndexError:
+        create_index(index_dir, data_dir)
+        idx=storage_obj.open_index()
+
+    writer = idx.writer()
+
+    # Wurde die Datei verschoben?
+    if origin_path == new_path:
+        writer.update_document(path=new_path, content=content)
+    else:
+        writer.delete_by_term('path', origin_path)
+        writer.add_document(path=new_path, content=content)
+    writer.commit()
+
