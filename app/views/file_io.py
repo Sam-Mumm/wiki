@@ -54,10 +54,9 @@ def moveArticle(src, dest, content):
 
 # Erstellt einen neuen Artikel
 def createArticle(article_fullpath, content):
-
     # Existiert der Zielpfad?
     dest_path = os.path.dirname(article_fullpath)
-    print(dest_path)
+
     if not os.path.isdir(dest_path):
         try:
             os.makedirs(dest_path, exist_ok=True)

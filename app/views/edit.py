@@ -9,8 +9,6 @@ pages_edit = Blueprint("pages_edit", __name__)
 def store_article(data_dir, origin_path, content, new_path):
     new_article_file = os.path.join(data_dir, new_path + ".md")
 
-    print("origin: "+origin_path)
-    print("new_path"+new_path)
     if origin_path == new_path:
         updateArticle(new_article_file, content)
     else:
