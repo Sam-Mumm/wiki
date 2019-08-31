@@ -72,3 +72,23 @@ def search_index(search_str, index_dir, data_dir):
         result_set.append(hit)
 
     return msg, result_set
+
+
+def add_document_index(index_dir, data_dir, path, content):
+    index_dir_absolute = os.path.abspath(index_dir)
+    storage_obj = FileStorage(index_dir_absolute)
+
+    try:
+        idx=storage_obj.open_index()
+    except whoosh.index.EmptyIndexError:
+        create_index(index_dir, data_dir)
+        idx=storage_obj.open_index()
+        return True
+
+    writer = idx.writer()
+    writer.add_document(path=path, content=content)
+    writer.commit()
+
+
+
+#def update_document_index(index_dir, data_dir, path, content)
