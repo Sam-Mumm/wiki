@@ -17,9 +17,13 @@ def home(path):
 
     start_site=current_app.config['START_SITE']
 
+    # Wurde eine Dateiendung mit angegeben?
+    if path.endswith(".md"):
+        return redirect(url_for('pages_view.home')+os.path.splitext(path)[0])
+
     if path != 'home':
 
-        full_path = os.path.join(data_dir, os.path.splitext(path)[0])
+        full_path = os.path.join(data_dir, path)
 
         if os.path.isfile(full_path+".md"):
 
@@ -49,3 +53,4 @@ def home(path):
 
             content=""
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
+
