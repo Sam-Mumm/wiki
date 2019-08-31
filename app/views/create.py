@@ -12,6 +12,8 @@ def create(path):
     data_dir = current_app.config['DATA_DIR']
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
+    wiki_name = current_app.config['WIKI_NAME']
+
     start_site_full_path = os.path.join(data_dir, start_site)
 
     form = ArticleForm()
@@ -47,4 +49,4 @@ def create(path):
     else:
         form.path.data = path+os.path.sep
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)

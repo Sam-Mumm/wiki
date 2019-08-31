@@ -14,7 +14,7 @@ def home(path):
     ]
 
     data_dir=current_app.config['DATA_DIR']
-
+    wiki_name=current_app.config['WIKI_NAME']
     start_site=current_app.config['START_SITE']
 
     # Wurde eine Dateiendung mit angegeben?
@@ -33,11 +33,11 @@ def home(path):
 
             content = readMarkDown(full_path+".md")
 
-            return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
+            return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
         elif os.path.isdir(full_path):
             return redirect(url_for('pages_index.index')+"/"+path)
         else:
-            return render_template('404.tmpl.html')
+            return render_template('404.tmpl.html', wiki_name=wiki_name)
     else:
         start_site_full_path = os.path.join(data_dir, start_site)
 
@@ -52,5 +52,7 @@ def home(path):
             )
 
             content=""
-        return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons)
+
+
+        return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
 

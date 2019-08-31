@@ -24,6 +24,7 @@ def edit(path):
     data_dir = current_app.config['DATA_DIR']
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
+    wiki_name = current_app.config['WIKI_NAME']
 
     form = ArticleForm()
 
@@ -59,7 +60,7 @@ def edit(path):
         article_file = os.path.join(data_dir, path + ".md")
 
         if not os.path.isfile(article_file):
-            return render_template('404.tmpl.html')
+            return render_template('404.tmpl.html', wiki_name=wiki_name)
 
         form.path.data=path
         form.article_content.data=readRaw(article_file)
@@ -71,4 +72,4 @@ def edit(path):
         else:
             form.article_content.data=""
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)

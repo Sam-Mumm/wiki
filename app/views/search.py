@@ -13,6 +13,9 @@ def index_refresh():
 @pages_search.route('/search', methods=["POST", "GET"])
 def search():
     results = []
+    index_dir = current_app.config['INDEX_DIR']
+    data_dir = current_app.config['DATA_DIR']
+    wiki_name = current_app.config['WIKI_NAME']
 
     navi_buttons = [
         {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'}
@@ -20,12 +23,10 @@ def search():
 
     if request.method != 'POST':
         msg = "Es wurde kein Suchbegriff angegeben"
-        return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons)
+        return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
 
     search_str = request.form['search']
-    index_dir = current_app.config['INDEX_DIR']
-    data_dir = current_app.config['DATA_DIR']
 
     msg, results = search_index(search_str, index_dir, data_dir)
 
-    return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons)
+    return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
