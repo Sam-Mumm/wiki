@@ -19,7 +19,7 @@ def create_index(index_dir, data_dir):
             shutil.rmtree(index_dir_absolute)
             os.makedirs(index_dir_absolute)
         except e:
-            return False
+            raise PermissionError("Das Index-Verzeichnis konnte nicht erstellt werden")
 
     idx = storage_obj.create_index(schema)
 
@@ -34,10 +34,10 @@ def create_index(index_dir, data_dir):
             if article.endswith('.md'):
                 article_path=path+"/"+article
 
-#            # Get file content
-            with codecs.open(article_path, "r", "utf-8") as f:
-                content = f.read()
-                writer.add_document(path=article_path, content=content)
+    #            # Get file content
+                with codecs.open(article_path, "r", "utf-8") as f:
+                    content = f.read()
+                    writer.add_document(path=article_path, content=content)
 
     writer.commit()
 

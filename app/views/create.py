@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, request, redirect, url_for
+from flask import Blueprint, render_template, current_app, request, redirect, url_for, flash
 from .file_io import createArticle
 from .article_form import ArticleForm
 from .whoosh_search import add_document_index
@@ -37,9 +37,18 @@ def create(path):
 
         article_fullpath = os.path.join(data_dir, form_path+".md")
 
-        if createArticle(article_fullpath, form_content):
+        try:
+            createArticle(article_fullpath, form_content)
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('pages_view.home'))
+
+        try:
             add_document_index(index_dir, data_dir, article_fullpath, form_content)
-            return redirect(url_for('pages_view.home') + redirect_path)
+        except Exception as e:
+            flash(str(e))
+
+        return redirect(url_for('pages_view.home') + redirect_path)
 
 
     if path == "home" and not os.path.isfile(start_site_full_path):

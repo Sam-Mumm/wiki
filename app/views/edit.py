@@ -1,21 +1,10 @@
-from flask import Blueprint, render_template, current_app, request, redirect, url_for
+from flask import Blueprint, render_template, current_app, request, redirect, url_for, flash
 from .article_form import ArticleForm
 from .file_io import readRaw, updateArticle, moveArticle
 from .whoosh_search import update_document_index
 import os, sys
 
 pages_edit = Blueprint("pages_edit", __name__)
-
-# Pruefung und speichern der Aenderunngen nach dem absenden von dem Formular
-def store_article(origin_path, content, new_path):
-
-    if origin_path == new_path:
-        updateArticle(origin_path, content)
-    else:
-        moveArticle(origin_path, new_path, content)
-
-    return True
-
 
 @pages_edit.route('/edit', defaults={'path': 'home'}, methods=["GET","POST"])
 @pages_edit.route('/edit/<path:path>', methods=["GET","POST"])
@@ -50,10 +39,30 @@ def edit(path):
         article_full_form_path = os.path.join(data_dir, form_path + ".md")
         article_full_orign_path = os.path.join(data_dir, path + ".md")
 
-        # Konnte die Datei erfolgreich gespeichert werden?
-        if store_article(article_full_orign_path, form_content, article_full_form_path):
-            update_document_index(index_dir, data_dir, article_full_orign_path, article_full_form_path, form_content)
-            return redirect(url_for('pages_view.home') + redirect_path)
+        # Wurde der Artikel auch verschoben?
+        if article_full_orign_path == article_full_orign_path:
+            # Versuche den Artikel zu aktualisieren
+            try:
+                updateArticle(article_full_orign_path, form_content)
+            except Exception as e:
+                flash(str(e))
+                return redirect(url_for('pages_view.home') + redirect_path)
+        else:
+            # Versuche den Artikel zu verschieben
+            try:
+                moveArticle(origin_path, new_path, form_content)
+            except Exception as e:
+                flash(str(e))
+                return redirect(url_for('pages_view.home') + redirect_path)
+
+        # Versuche den Index zu aktualisieren
+        try:
+           update_document_index(index_dir, data_dir, article_full_orign_path, article_full_form_path, form_content)
+        except Exception as e:
+           flash(str(e))
+
+        flash("Der Artikel wurde erfolgreich aktualisiert")
+        return redirect(url_for('pages_view.home') + redirect_path)
 
     # Ist die zu bearbeitende Seite die Startseite?
     if path != 'home':
@@ -63,12 +72,22 @@ def edit(path):
             return render_template('404.tmpl.html', wiki_name=wiki_name)
 
         form.path.data=path
-        form.article_content.data=readRaw(article_file)
-    else:
-        form.path.data = 'home'
 
-        if os.path.isfile(data_dir+"/"+start_site):
-            form.article_content.data = readRaw(data_dir+"/"+start_site)
+        try:
+            form.article_content.data=readRaw(article_file)
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('pages_view.home'))
+    else:
+        form .path.data = 'home'
+
+        start_site_absolute = os.path.join(data_dir, start_site)
+        if os.path.isfile(start_site_absolute):
+            try:
+                form.article_content.data = readRaw(start_site_absolute)
+            except Exception as e:
+                flash(str(e))
+                return redirect(url_for('pages_view.home'))
         else:
             form.article_content.data=""
 

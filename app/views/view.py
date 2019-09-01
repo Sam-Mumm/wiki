@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, redirect, url_for
+from flask import Blueprint, render_template, current_app, redirect, url_for, flash
 import os, sys
 from .file_io import readMarkDown
 
@@ -20,18 +20,19 @@ def home(path):
     # Wurde eine Dateiendung mit angegeben?
     if path.endswith(".md"):
         return redirect(url_for('pages_view.home')+os.path.splitext(path)[0])
-
     if path != 'home':
-
         full_path = os.path.join(data_dir, path)
 
         if os.path.isfile(full_path+".md"):
-
             navi_buttons.append(
                 {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
             )
 
-            content = readMarkDown(full_path+".md")
+            try:
+                content = readMarkDown(full_path+".md")
+            except Exception as e:
+                flash(str(e))
+                return redirect(url_for('pages_view.home'))
 
             return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
         elif os.path.isdir(full_path):
@@ -42,7 +43,13 @@ def home(path):
         start_site_full_path = os.path.join(data_dir, start_site)
 
         if os.path.exists(start_site_full_path):
-            content = readMarkDown(start_site_full_path)
+
+            try:
+                content = readMarkDown(start_site_full_path)
+            except Exception as e:
+                flash(str(e))
+                content = ""
+
             navi_buttons.append(
                 {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
             )
@@ -52,7 +59,6 @@ def home(path):
             )
 
             content=""
-
 
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
 

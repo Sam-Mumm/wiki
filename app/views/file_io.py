@@ -4,13 +4,20 @@ import os
 
 # Auslesen eines Artikels (=Datei) einschliesslich Markdown-Parsing
 def readMarkDown(path):
-    return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks"])
+    try:
+        return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks"])
+    except:
+        raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen")
 
 
 # Auslesen eines Artikels (=Datei) ohne Parsing
 def readRaw(path):
-    with codecs.open(path, 'r', 'utf-8') as fh:
-        content = fh.read()
+    try:
+        with codecs.open(path, 'r', 'utf-8') as fh:
+            content = fh.read()
+    except:
+        raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen")
+
     return content
 
 
@@ -19,37 +26,31 @@ def updateArticle(path, content):
     try:
         with codecs.open(path, 'w+', 'utf-8') as fh:
             fh.write(content)
-    except Exception as e:
-        return False
+    except:
+        raise PermissionError("Die Datei konnte nicht geschrieben werden")
 
     return True
 
 
-# Verschiebt einen Artikel und gibt true zurueck falls es erfolgreich war, sonst false
+# Verschiebt einen Artikel und gibt bei Erfolg true zurueck
 def moveArticle(src, dest, content):
-    success = (False, False)
+    # Versuche den Artikel zu aktualisieren
+    updateArticle(src, content)
 
-    # Konnte der Artikel vor dem verschieben aktualisiert werden?
-    if updateArticle(src, content):
-        success = (True, False)
-    else:
-        return success
-
-    # Existiert der Zielpfad?
+    # Versuche die Verzeichnisstruktur anzulegen
     dest_path = os.path.dirname(dest)
-    if not os.path.isdir(dest_path):
-        try:
-            os.makedirs(dest_path, exist_ok=True)
-        except Exception as e:
-            return success
+    try:
+        os.makedirs(dest_path, exist_ok=True)
+    except:
+        raise PermissionError("Die Verzeichnisse konnten nicht erstellt werden")
 
-    # Existiert bereits eine Zieldatei mit dem gleichen Namen?
-    if os.path.exists(dest):
-        return success
+    # Den Artikel umzubennen / zu verschieben
+    try:
+        os.rename(src, dest)
+    except FileExistsError:
+        raise FileExistsError("Es existiert bereits eine Datei mit dem gleichen Namen")
 
-    os.rename(src, dest)
-
-    return success
+    return True
 
 
 # Erstellt einen neuen Artikel
@@ -57,10 +58,10 @@ def createArticle(article_fullpath, content):
     # Existiert der Zielpfad?
     dest_path = os.path.dirname(article_fullpath)
 
-    if not os.path.isdir(dest_path):
-        try:
-            os.makedirs(dest_path, exist_ok=True)
-        except Exception as e:
-            return False
+    # Versuche das Verzeichnis zu erstellen
+    try:
+        os.makedirs(dest_path, exist_ok=True)
+    except Exception as e:
+        raise PermissionError("Die Verzeichnisse konnten nicht erstellt werden")
 
     return updateArticle(article_fullpath, content)
