@@ -1,13 +1,13 @@
 from whoosh.fields import *
 import whoosh.index
 from whoosh.qparser import QueryParser
-import os, sys, shutil
 from whoosh.filedb.filestore import FileStorage
-import codecs
-#import whoosh
 from whoosh.highlight import ContextFragmenter
+import os, sys, shutil
+import codecs
 
-
+# Erstellt von data_dir einen neuen Index in index_dir.
+# Liefert True zurueck wenn die indizierung erfolgreich war
 def create_index(index_dir, data_dir):
     index_dir_absolute = os.path.abspath(index_dir)
     schema = Schema(path=ID(stored=True, unique=True), content=TEXT(stored=True))
@@ -25,6 +25,7 @@ def create_index(index_dir, data_dir):
 
     writer = idx.writer()
 
+    # Iteriere über alle Dateien die auf .md enden
     for (path, dirs, files) in os.walk(data_dir):
         # Remove the git-Folder
         if '.git' in dirs:
@@ -34,10 +35,14 @@ def create_index(index_dir, data_dir):
             if article.endswith('.md'):
                 article_path=path+"/"+article
 
-    #            # Get file content
-                with codecs.open(article_path, "r", "utf-8") as f:
-                    content = f.read()
-                    writer.add_document(path=article_path, content=content)
+                try:
+                    # Get file content
+                    with codecs.open(article_path, "r", "utf-8") as f:
+                        content = f.read()
+                        writer.add_document(path=article_path, content=content)
+                except:
+                    continue
+
 
     writer.commit()
 
