@@ -16,7 +16,7 @@ def readRaw(path):
         with codecs.open(path, 'r', 'utf-8') as fh:
             content = fh.read()
     except:
-        raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen")
+        raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte prüfen")
 
     return content
 
@@ -27,7 +27,7 @@ def updateArticle(path, content):
         with codecs.open(path, 'w+', 'utf-8') as fh:
             fh.write(content)
     except:
-        raise PermissionError("Die Datei konnte nicht geschrieben werden")
+        raise PermissionError("Die Datei konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen")
 
     return True
 
