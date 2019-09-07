@@ -1,0 +1,7 @@
+version: '2'
+services:
+  wiki:
+    container_name: wiki
+    image: 'wiki:1.0'
+    ports:
+      - '5000:5000'
