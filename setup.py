@@ -10,5 +10,5 @@ setup(
     packages = find_packages(),
     install_requires = ['flask == 1.0.2', 'Whoosh == 2.7.4', 'markdown2 == 2.3.6', 'Flask-WTF==0.14.2'],
     include_package_data = True,
-    test_requires=["pytest"]
+    extras_require={ 'testing': ["pytest"], }
 )
