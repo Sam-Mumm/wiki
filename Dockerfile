@@ -6,7 +6,7 @@ RUN apt-get update -y && \
      apt-get install -y python3 python3-pip uwsgi uwsgi-plugin-python3 
 
 COPY ./requirements.txt wsgi.ini ./run.py /opt/wiki/
-COPY ./app /opt/wiki/app
+COPY ./wiki /opt/wiki/wiki
 
 WORKDIR /opt/wiki
 

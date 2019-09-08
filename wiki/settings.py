@@ -1,8 +1,8 @@
 WIKI_NAME = "My Wiki"
 
-DATA_DIR = "./app/static/data"
+DATA_DIR = "./wiki/static/data"
 
-INDEX_DIR = "./app/static/index"
+INDEX_DIR = "./wiki/static/index"
 
 SECRET = "Development Key"
 
