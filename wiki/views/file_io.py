@@ -5,7 +5,7 @@ import os
 # Auslesen eines Artikels (=Datei) einschliesslich Markdown-Parsing
 def readMarkDown(path):
     try:
-        return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks"])
+        return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks", "break-on-newline"])
     except:
         raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen")
 
