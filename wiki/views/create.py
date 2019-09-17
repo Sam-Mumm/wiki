@@ -24,6 +24,11 @@ def create(path):
     ]
 
     if request.method == 'POST':
+
+        # wurde der Abbruch-Button gedrueckt?
+        if "cancel" in request.form:
+            return redirect(url_for('pages_view.index') + path)
+
         form_content = request.form['article_content']
 
         if 'path' in request.form:

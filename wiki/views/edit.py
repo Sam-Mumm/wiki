@@ -24,6 +24,11 @@ def edit(path):
 
     # Wurde der Speicher-Button gedrueckt?
     if request.method == 'POST':
+
+        # wurde der Abbruch-Button gedrueckt?
+        if "cancel" in request.form:
+            return redirect(url_for('pages_view.home') + path)
+
         form_content = request.form['article_content']
 
         if 'path' in request.form:
