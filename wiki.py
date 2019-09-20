@@ -1,5 +1,9 @@
 from wiki import wiki
 
-if __name__ == '__main__':
+def start_app():
     wiki.run(host='0.0.0.0',
-            port=5000)
+             port=5000)
+
+
+if __name__ == '__main__':
+    start_app()
