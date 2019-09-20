@@ -14,7 +14,7 @@
                 {% if form.path.data == 'home' %}
                     {{ form.path(disabled=True) }}
                 {% else %}
-                    {{ form.path }}
+                    {{ form.path(required=required) }}
                 {% endif %}
             </div>
         </div>
