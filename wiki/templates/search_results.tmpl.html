@@ -7,7 +7,7 @@
 
     {% for r in results %}
         <a href="{{ r.path }}">{{ r.path }}</a><br/>
-        {{ r.content }}
+        {{ r.content|safe }}
         <br/><br/>
     {% endfor %}
 {% endblock %}
