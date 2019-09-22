@@ -45,7 +45,7 @@ def edit(path):
         article_full_orign_path = os.path.join(data_dir, path + ".md")
 
         # Wurde der Artikel auch verschoben?
-        if article_full_orign_path == article_full_orign_path:
+        if article_full_orign_path == article_full_form_path:
             # Versuche den Artikel zu aktualisieren
             try:
                 updateArticle(article_full_orign_path, form_content)
@@ -55,7 +55,7 @@ def edit(path):
         else:
             # Versuche den Artikel zu verschieben
             try:
-                moveArticle(origin_path, new_path, form_content)
+                moveArticle(article_full_orign_path, article_full_form_path, form_content)
             except Exception as e:
                 flash(str(e))
                 return redirect(url_for('pages_view.home') + redirect_path)
