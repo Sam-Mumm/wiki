@@ -8,7 +8,7 @@ setup(
     author_email = 'dan.steffen.de@gmail.com',
     description = 'Small Wiki with git support',
     packages = find_packages(),
-    install_requires = ['flask == 1.0.2', 'Whoosh == 2.7.4', 'markdown2 == 2.3.6', 'Flask-WTF==0.14.2'],
+    install_requires = ['flask == 1.0.2', 'Whoosh == 2.7.4', 'markdown2 == 2.3.6', 'Flask-WTF==0.14.2', 'Flask-Babel==0.12.2'],
     include_package_data = True,
     extras_require={ 'testing': ["pytest"] },
     scripts=["wiki.py"]
