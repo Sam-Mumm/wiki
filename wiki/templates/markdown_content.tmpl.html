@@ -5,23 +5,23 @@
 {% endblock %}
 
 {% block footer %}
-    	<script type="text/javascript">
-            $(document).ready(function() {
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            $.notify({
-                                message: '{{ message }}'
-                            },{
-                                type: 'danger',
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                            });
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-    		});
-        </script>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    {% for message in messages %}
+                        $.notify({
+                          message: '{{ message }}'
+                        },{
+                            type: 'danger',
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            }
+                        });
+                    {% endfor %}
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
 {% endblock %}
