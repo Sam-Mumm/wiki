@@ -1,0 +1,83 @@
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-10-06 06:36+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: wiki/templates/base.tmpl.html:38
+msgid "Suchen"
+msgstr ""
+
+#: wiki/templates/table_content.tmpl.html:13
+msgid "Größe"
+msgstr ""
+
+#: wiki/templates/table_content.tmpl.html:14
+msgid "Geändert am"
+msgstr ""
+
+#: wiki/templates/table_content.tmpl.html:15
+msgid "Erstellt am"
+msgstr ""
+
+#: wiki/views/edit.py:70
+msgid "Der Artikel wurde erfolgreich aktualisiert"
+msgstr ""
+
+#: wiki/views/file_io.py:11 wiki/views/file_io.py:20
+msgid ""
+"Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte "
+"überprüfen"
+msgstr ""
+
+#: wiki/views/file_io.py:31
+msgid ""
+"Der Artikel konnte nicht geschrieben werden, bitte die Zugriffsrechte "
+"prüfen"
+msgstr ""
+
+#: wiki/views/file_io.py:46 wiki/views/file_io.py:66
+msgid "Die Verzeichnisse konnten nicht erstellt werden"
+msgstr ""
+
+#: wiki/views/file_io.py:52
+msgid "Es existiert bereits eine Datei mit dem gleichen Namen"
+msgstr ""
+
+#: wiki/views/index.py:49 wiki/views/view.py:59
+msgid "Erstellen"
+msgstr ""
+
+#: wiki/views/search.py:26
+msgid "Es wurde kein Suchbegriff angegeben"
+msgstr ""
+
+#: wiki/views/view.py:29 wiki/views/view.py:55
+msgid "Bearbeiten"
+msgstr ""
+
+#: wiki/views/whoosh_search.py:23
+msgid "Das Index-Verzeichnis konnte nicht erstellt werden"
+msgstr ""
+
+#: wiki/views/whoosh_search.py:73
+msgid "Es gab fuer den Suchstring {} keine Treffer"
+msgstr ""
+
+#: wiki/views/whoosh_search.py:76
+msgid "Es wurden {count_hits} Treffer fuer die Suchanfrage {search_str} gefunden"
+msgstr ""
+

@@ -1,0 +1,99 @@
+# English translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-10-06 06:36+0200\n"
+"PO-Revision-Date: 2019-10-06 06:39+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: wiki/templates/base.tmpl.html:38
+msgid "Suchen"
+msgstr "Search"
+
+#: wiki/templates/table_content.tmpl.html:13
+msgid "Größe"
+msgstr "Size"
+
+#: wiki/templates/table_content.tmpl.html:14
+msgid "Geändert am"
+msgstr "Modified at"
+
+#: wiki/templates/table_content.tmpl.html:15
+msgid "Erstellt am"
+msgstr "Created at"
+
+#: wiki/views/edit.py:70
+msgid "Der Artikel wurde erfolgreich aktualisiert"
+msgstr "The article has been successfully updated"
+
+#: wiki/views/file_io.py:11 wiki/views/file_io.py:20
+msgid ""
+"Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte "
+"überprüfen"
+msgstr "The article could not be read, please check permissions"
+
+#: wiki/views/file_io.py:31
+msgid ""
+"Der Artikel konnte nicht geschrieben werden, bitte die Zugriffsrechte "
+"prüfen"
+msgstr "The article could not be writed, please check permissions"
+
+#: wiki/views/file_io.py:46 wiki/views/file_io.py:66
+msgid "Die Verzeichnisse konnten nicht erstellt werden"
+msgstr "The directories could not be created"
+
+#: wiki/views/file_io.py:52
+msgid "Es existiert bereits eine Datei mit dem gleichen Namen"
+msgstr "An article with the same name already exists on this location"
+
+#: wiki/views/index.py:49 wiki/views/view.py:59
+msgid "Erstellen"
+msgstr "Create"
+
+#: wiki/views/search.py:26
+msgid "Es wurde kein Suchbegriff angegeben"
+msgstr "No search string was given"
+
+#: wiki/views/view.py:29 wiki/views/view.py:55
+msgid "Bearbeiten"
+msgstr "Edit"
+
+#: wiki/views/whoosh_search.py:23
+msgid "Das Index-Verzeichnis konnte nicht erstellt werden"
+msgstr "No result found for {}"
+
+#: wiki/views/whoosh_search.py:73
+msgid "Es gab fuer den Suchstring {} keine Treffer"
+msgstr ""
+
+#: wiki/views/whoosh_search.py:76
+msgid "Es wurden {count_hits} Treffer fuer die Suchanfrage {search_str} gefunden"
+msgstr "Found {count_hits} results for {search_str}"
+
+#: wiki/views/article_form.py:6
+msgid "Pfad"
+msgstr "Path"
+
+#: wiki/views/article_form.py:7
+msgid "Kommentar"
+msgstr "Comment"
+
+#: wiki/views/article_form.py:9
+msgid "Speichern"
+msgstr "Save"
+
+#: wiki/views/article_form.py:10
+msgid "Abbrechen"
+msgstr "Cancel"
