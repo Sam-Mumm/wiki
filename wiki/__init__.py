@@ -1,5 +1,6 @@
 # noinspection PyInterpreter,PyInterpreter
 from flask import Flask
+from flask_babel import Babel
 from uuid import uuid4
 from flask_wtf.csrf import CSRFProtect
 from wiki.views.view import pages_view
@@ -12,6 +13,8 @@ from wiki.jinja_filters import fix_images
 csrf = CSRFProtect()
 
 wiki = Flask(__name__)
+
+babel = Babel(wiki)
 
 csrf.init_app(wiki)
 

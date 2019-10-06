@@ -5,6 +5,7 @@ from whoosh.filedb.filestore import FileStorage
 from whoosh.highlight import ContextFragmenter
 import os, sys, shutil
 import codecs
+from flask_babel import _
 
 # Erstellt von data_dir einen neuen Index in index_dir.
 # Liefert True zurueck wenn die indizierung erfolgreich war
@@ -19,7 +20,7 @@ def create_index(index_dir, data_dir):
             shutil.rmtree(index_dir_absolute)
             os.makedirs(index_dir_absolute)
         except e:
-            raise PermissionError("Das Index-Verzeichnis konnte nicht erstellt werden")
+            raise PermissionError(_("Das Index-Verzeichnis konnte nicht erstellt werden"))
 
     idx = storage_obj.create_index(schema)
 
@@ -69,10 +70,10 @@ def search_index(search_str, index_dir, data_dir):
     results.fragmenter = whoosh.highlight.ContextFragmenter(surround=20)
 
     if len(results) == 0:
-        msg = "Es gab fuer den Suchstring "+search_str+" keine Treffer"
+        msg = _("Es gab fuer den Suchstring {} keine Treffer").format(search_str)
         return msg, result_set
 
-    msg = "Es wurden "+str(len(results))+" Treffer fuer die Suchanfrage "+search_str+" gefunden"
+    msg = _("Es wurden {count_hits} Treffer fuer die Suchanfrage {search_str} gefunden").format(count_hits=str(len(results)), search_str=search_str)
     for r in  results:
         hit = {}
 

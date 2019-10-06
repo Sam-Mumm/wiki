@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, current_app, redirect, url_for, flash
+from flask_babel import _
 import os, sys
 from .file_io import readMarkDown
 
@@ -25,7 +26,7 @@ def home(path):
 
         if os.path.isfile(full_path+".md"):
             navi_buttons.append(
-                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
+                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _('Bearbeiten')}
             )
 
             try:
@@ -51,11 +52,11 @@ def home(path):
                 content = ""
 
             navi_buttons.append(
-                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': 'Bearbeiten'}
+                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _('Bearbeiten')}
             )
         else:
             navi_buttons.append(
-                {'endpoint': 'pages_create.create', 'path': "", 'name': 'Erstellen'}
+                {'endpoint': 'pages_create.create', 'path': "", 'name': _('Erstellen')}
             )
 
             content=""

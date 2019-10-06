@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for
+from flask_babel import _
 from .whoosh_search import search_index, create_index
 
 pages_search = Blueprint("pages_search", __name__)
@@ -22,7 +23,7 @@ def search():
     ]
 
     if request.method != 'POST':
-        msg = "Es wurde kein Suchbegriff angegeben"
+        msg = _("Es wurde kein Suchbegriff angegeben")
         return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
 
     search_str = request.form['search']

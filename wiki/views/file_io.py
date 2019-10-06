@@ -1,3 +1,4 @@
+from flask_babel import _
 import markdown2
 import codecs
 import os
@@ -7,7 +8,7 @@ def readMarkDown(path):
     try:
         return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks", "break-on-newline"])
     except:
-        raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen")
+        raise PermissionError(_("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen"))
 
 
 # Auslesen eines Artikels (=Datei) ohne Parsing
@@ -16,7 +17,7 @@ def readRaw(path):
         with codecs.open(path, 'r', 'utf-8') as fh:
             content = fh.read()
     except:
-        raise PermissionError("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen")
+        raise PermissionError(_("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen"))
 
     return content
 
@@ -27,7 +28,7 @@ def updateArticle(path, content):
         with codecs.open(path, 'w+', 'utf-8') as fh:
             fh.write(content)
     except:
-        raise PermissionError("Der Artikel konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen")
+        raise PermissionError(_("Der Artikel konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen"))
 
     return True
 
@@ -42,13 +43,13 @@ def moveArticle(src, dest, content):
     try:
         os.makedirs(dest_path, exist_ok=True)
     except:
-        raise PermissionError("Die Verzeichnisse konnten nicht erstellt werden")
+        raise PermissionError(_("Die Verzeichnisse konnten nicht erstellt werden"))
 
     # Den Artikel umzubennen / zu verschieben
     try:
         os.rename(src, dest)
     except FileExistsError:
-        raise FileExistsError("Es existiert bereits eine Datei mit dem gleichen Namen")
+        raise FileExistsError(_("Es existiert bereits eine Datei mit dem gleichen Namen"))
 
     return True
 
@@ -62,6 +63,6 @@ def createArticle(article_fullpath, content):
     try:
         os.makedirs(dest_path, exist_ok=True)
     except Exception as e:
-        raise PermissionError("Die Verzeichnisse konnten nicht erstellt werden")
+        raise PermissionError(_("Die Verzeichnisse konnten nicht erstellt werden"))
 
     return updateArticle(article_fullpath, content)

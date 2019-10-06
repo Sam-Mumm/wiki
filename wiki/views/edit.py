@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for, flash
 from .article_form import ArticleForm
+from flask_babel import _
 from .file_io import readRaw, updateArticle, moveArticle
 from .whoosh_search import update_document_index
 import os, sys
@@ -66,7 +67,7 @@ def edit(path):
         except Exception as e:
            flash(str(e))
 
-        flash("Der Artikel wurde erfolgreich aktualisiert")
+        flash(_("Der Artikel wurde erfolgreich aktualisiert"))
         return redirect(url_for('pages_view.home') + redirect_path)
 
     # Ist die zu bearbeitende Seite die Startseite?

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, current_app, redirect, url_for
+from flask_babel import _
 import os, sys
 import markdown2
 from datetime import datetime
@@ -45,7 +46,7 @@ def index(path):
         create_path=''
 
     navi_buttons = [
-        {'endpoint': 'pages_create.create', 'path': create_path, 'name': 'Erstellen'},
+        {'endpoint': 'pages_create.create', 'path': create_path, 'name': _('Erstellen')},
     ]
 
     data_dir=current_app.config['DATA_DIR']
