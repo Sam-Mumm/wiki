@@ -72,11 +72,11 @@ msgstr "Edit"
 
 #: wiki/views/whoosh_search.py:23
 msgid "Das Index-Verzeichnis konnte nicht erstellt werden"
-msgstr "No result found for {}"
+msgstr ""
 
 #: wiki/views/whoosh_search.py:73
 msgid "Es gab fuer den Suchstring {} keine Treffer"
-msgstr ""
+msgstr "No result found for {}"
 
 #: wiki/views/whoosh_search.py:76
 msgid "Es wurden {count_hits} Treffer fuer die Suchanfrage {search_str} gefunden"
