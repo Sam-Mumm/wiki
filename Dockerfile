@@ -5,7 +5,7 @@ MAINTAINER dan.steffen.de@gmail.com
 RUN apt-get update -y && \
      apt-get install -y python3 python3-pip uwsgi uwsgi-plugin-python3 
 
-COPY ./requirements.txt wsgi.ini ./wiki.py /opt/wiki/
+COPY ./requirements.txt uwsgi.ini ./wiki.py /opt/wiki/
 COPY ./wiki /opt/wiki/wiki
 
 WORKDIR /opt/wiki
