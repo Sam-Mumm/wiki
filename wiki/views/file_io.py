@@ -56,13 +56,17 @@ def moveArticle(src, dest, content):
 
 # Erstellt einen neuen Artikel
 def createArticle(article_fullpath, content):
-    # Existiert der Zielpfad?
+    # Existiert bereits eine Datei/Verzeichnis mit dem gleichen Namen?
+    if os.path.exists(article_fullpath):
+        raise FileExistsError(_("Es existiert bereits eine Datei mit dem gleichen Namen"))
+
+    # extrahieren des Verzeichnisnamens aus dem Pfad
     dest_path = os.path.dirname(article_fullpath)
 
     # Versuche das Verzeichnis zu erstellen
     try:
         os.makedirs(dest_path, exist_ok=True)
     except Exception as e:
-        raise PermissionError(_("Die Verzeichnisse konnten nicht erstellt werden"))
+        raise OSError(_("Die Verzeichnisse konnten nicht erstellt werden"))
 
     return updateArticle(article_fullpath, content)
