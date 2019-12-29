@@ -43,7 +43,7 @@ def moveArticle(src, dest, content):
     try:
         os.makedirs(dest_path, exist_ok=True)
     except:
-        raise PermissionError(_("Die Verzeichnisse konnten nicht erstellt werden"))
+        raise OSError(_("Die Verzeichnisse konnten nicht erstellt werden"))
 
     # Den Artikel umzubennen / zu verschieben
     try:
