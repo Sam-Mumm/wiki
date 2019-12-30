@@ -5,14 +5,14 @@
 
 ## Screenshots
 
-## Installation
-For the Installation via pypi or git I recommand to install the wiki i a virtual environment.
+## Running on a Host
+For the Installation via pypi or git I recommand to install the wiki in a virtual environment.
 ```commandline
 # python3 -m venv /opt/wiki
 # source /opt/wiki/bin/activate
 ```
 
-
+After the setup up of the environment you can install the wiki on one of this ways
 ### ... via PyPi
 
 
@@ -22,7 +22,7 @@ $ git clone https://github.com/Sam-Mumm/wiki.git /opt/wiki
 $ cd /opt/wiki
 ```
 
-### ... via Docker
+## Running via Docker
 
 
 ## Configuration
@@ -30,6 +30,12 @@ $ cd /opt/wiki
 #### nginx
 ```commandline
 # apt install -y nginx
+```
+
+```json
+location / {
+    proxy_pass http://localhost:5000
+}
 ```
 
 ### systemd
