@@ -13,115 +13,121 @@ def tempdir():
     shutil.rmtree(tempdir)
 
 articles = [
-        ["", "README.md", "# Hallo Welt", "<h1>Hallo Welt</h1>\n"],
-        ["test", "article.md", "# Hallo Welt", "<h1>Hallo Welt</h1>\n"]
-]
+                { "dir": "",
+                  "filename": "README.md",
+                  "content_md": "# Hallo Welt",
+                  "content_html": "<h1>Hallo Welt</h1>\n"
+                },
+                { "dir": "test",
+                  "filename": "article.md",
+                  "content_md": "# Hallo Welt",
+                  "content_html": "<h1>Hallo Welt</h1>\n"
+                }
+    ]
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_readRaw(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
+@pytest.mark.parametrize("article", articles)
+def test_readRaw(tempdir, article):
+    dest_path=os.path.join(tempdir, article['dir'])
     os.makedirs(dest_path, exist_ok=True)
 
-    with codecs.open(os.path.join(dest_path, file), 'w', 'utf-8') as fh:
-        fh.write(content_md)
+    with codecs.open(os.path.join(dest_path, article['filename']), 'w', 'utf-8') as fh:
+        fh.write(article['content_md'])
 
-    assert file_io.readRaw(os.path.join(dest_path, file)) == content_md
+    assert file_io.readRaw(os.path.join(dest_path, article['filename'])) == article['content_md']
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_readRaw_no_permissions(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
+@pytest.mark.parametrize("article", articles)
+def test_readRaw_no_permissions(tempdir, article):
+    dest_path=os.path.join(tempdir, article['dir'])
     os.makedirs(dest_path, exist_ok=True)
 
-    with codecs.open(os.path.join(dest_path, file), 'w', 'utf-8') as fh:
-        fh.write(content_md)
-
-    os.chmod(os.path.join(dest_path, file), 0o200)
+    os.mknod(os.path.join(dest_path, article['filename']), 0o200)
 
     with pytest.raises(PermissionError, match="konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen"):
-        file_io.readRaw(os.path.join(dest_path, file))
+        file_io.readRaw(os.path.join(dest_path, article['filename']))
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_readMarkDown(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
+@pytest.mark.parametrize("article", articles)
+def test_readMarkDown(tempdir, article):
+    dest_path=os.path.join(tempdir, article['dir'])
     os.makedirs(dest_path, exist_ok=True)
 
-    with codecs.open(os.path.join(dest_path, file), 'w', 'utf-8') as fh:
-        fh.write(content_md)
+    with codecs.open(os.path.join(dest_path, article['filename']), 'w', 'utf-8') as fh:
+        fh.write(article['content_md'])
 
-    assert file_io.readMarkDown(os.path.join(dest_path, file)) == content_html
+    assert file_io.readMarkDown(os.path.join(dest_path, article['filename'])) == article['content_html']
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_readMarkDown_no_permissions(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
+@pytest.mark.parametrize("article", articles)
+def test_readMarkDown_no_permissions(tempdir, article):
+    dest_path=os.path.join(tempdir, article['dir'])
     os.makedirs(dest_path, exist_ok=True)
 
-    with codecs.open(os.path.join(dest_path, file), 'w', 'utf-8') as fh:
-        fh.write(content_md)
+    with codecs.open(os.path.join(dest_path, article['filename']), 'w', 'utf-8') as fh:
+        fh.write(article['content_md'])
 
-    os.chmod(os.path.join(dest_path, file), 0o200)
+    os.chmod(os.path.join(dest_path, article['filename']), 0o200)
 
     with pytest.raises(PermissionError, match="konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen"):
-        file_io.readRaw(os.path.join(dest_path, file))
+        assert file_io.readMarkDown(os.path.join(dest_path, article['filename'])) == article['content_html']
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_updateArticle(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
+@pytest.mark.parametrize("article", articles)
+def test_createArticle(tempdir, article):
+    dest_path = os.path.join(tempdir, article['dir'])
 
-    os.makedirs(dest_path, exist_ok=True)
+    assert file_io.createArticle(os.path.join(dest_path, article['filename']), article['content_md'])
+    assert os.path.exists(os.path.join(dest_path, article['filename']))
 
-    assert file_io.updateArticle(os.path.join(dest_path, file), content_md)
-    assert os.path.exists(os.path.join(dest_path, file))
-
-
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_updateArticle_no_permission(tempdir, dir, file, content_md, content_html):
-    dest_path = os.path.join(tempdir, dir)
-
-    os.makedirs(dest_path, exist_ok=True)
-    os.chmod(dest_path, 0o400)
-
-    with pytest.raises(PermissionError, match="konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen"):
-        file_io.updateArticle(os.path.join(dest_path, file), content_md)
-
-    assert not os.path.exists(os.path.join(dest_path, file))
+    with codecs.open(os.path.join(dest_path, article['filename']), 'r', 'utf-8') as fh:
+        assert fh.read() == article['content_md']
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_createArticle(tempdir, dir, file, content_md, content_html):
-    dest_path = os.path.join(tempdir, dir)
-
-    assert file_io.createArticle(os.path.join(dest_path, file), content_md)
-    assert os.path.exists(os.path.join(dest_path, file))
-
-
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_createArticle_no_permission(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
-    os.makedirs(dest_path, exist_ok=True)
+@pytest.mark.parametrize("article", articles)
+def test_createArticle_no_permissions(tempdir, article):
+    dest_path = os.path.join(tempdir, article['dir'])
 
     os.chmod(tempdir, 0o400)
 
-    if dir == "":
+    if article['dir'] == "":
         with pytest.raises(PermissionError, match="konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen"):
-            file_io.createArticle(os.path.join(dest_path, file), content_md)
+            file_io.createArticle(os.path.join(dest_path, article['filename']), article['content_md'])
     else:
         with pytest.raises(OSError, match="Die Verzeichnisse konnten nicht erstellt werden"):
-            file_io.createArticle(os.path.join(dest_path, file), content_md)
-    os.chmod(tempdir, 0o700)
+            file_io.createArticle(os.path.join(dest_path, article['filename']), article['content_md'])
 
 
-@pytest.mark.parametrize("dir, file, content_md, content_html", articles)
-def test_createArticle_file_exists(tempdir, dir, file, content_md, content_html):
-    dest_path=os.path.join(tempdir, dir)
+@pytest.mark.parametrize("article", articles)
+def test_createArticle_file_exists(tempdir, article):
+    dest_path = os.path.join(tempdir, article['dir'])
     os.makedirs(dest_path, exist_ok=True)
 
-    with codecs.open(os.path.join(dest_path, file), 'w', 'utf-8') as fh:
-        fh.write(content_md)
+    os.mknod(os.path.join(dest_path, article['filename']))
 
     with pytest.raises(FileExistsError, match="Es existiert bereits eine Datei mit dem gleichen Namen"):
-        file_io.createArticle(os.path.join(dest_path, file), content_md)
+        file_io.createArticle(os.path.join(dest_path, article['filename']), article['content_md'])
+
+
+@pytest.mark.parametrize("article", articles)
+def test_updateArticle(tempdir, article):
+    dest_path = os.path.join(tempdir, article['dir'])
+    os.makedirs(dest_path, exist_ok=True)
+
+    os.mknod(os.path.join(dest_path, article['filename']))
+
+    assert file_io.updateArticle(os.path.join(dest_path, article['filename']), article['content_md'])
+
+    with codecs.open(os.path.join(dest_path, article['filename']), 'r', 'utf-8') as fh:
+        assert fh.read() == article['content_md']
+
+
+@pytest.mark.parametrize("article", articles)
+def test_updateArticle_no_permissions(tempdir, article):
+    dest_path = os.path.join(tempdir, article['dir'])
+    os.makedirs(dest_path, exist_ok=True)
+
+    os.mknod(os.path.join(dest_path, article['filename']), 0o400)
+
+    with pytest.raises(PermissionError, match="konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen"):
+        assert file_io.updateArticle(os.path.join(dest_path, article['filename']), article['content_md'])
