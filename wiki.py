@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from wiki import wiki
 
 def start_app():
