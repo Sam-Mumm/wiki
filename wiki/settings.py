@@ -1,8 +1,12 @@
+import os
+
+BASE_DIR = os.path.dirname(__file__)
+
 WIKI_NAME = "My Wiki"
 
-DATA_DIR = "./wiki/static/data"
+DATA_DIR = os.path.join(BASE_DIR, "static/data")
 
-INDEX_DIR = "./wiki/static/index"
+INDEX_DIR = os.path.join(BASE_DIR, "static/index")
 
 START_SITE = "README.md"
 

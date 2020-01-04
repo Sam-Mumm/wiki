@@ -11,5 +11,5 @@ setup(
     install_requires = ['flask == 1.0.2', 'Whoosh == 2.7.4', 'markdown2 == 2.3.6', 'Flask-WTF==0.14.2', 'Flask-Babel==0.12.2'],
     include_package_data = True,
     extras_require={ 'testing': ["pytest"] },
-    scripts=["wiki.py"]
+    scripts=["wiki_run.py"]
 )
