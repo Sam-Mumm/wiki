@@ -10,15 +10,14 @@ from flask_babel import _
 # Erstellt von data_dir einen neuen Index in index_dir.
 # Liefert True zurueck wenn die indizierung erfolgreich war
 def create_index(index_dir, data_dir):
-    index_dir_absolute = os.path.abspath(index_dir)
     schema = Schema(path=ID(stored=True, unique=True), content=TEXT(stored=True))
 
-    storage_obj = FileStorage(index_dir_absolute)
+    storage_obj = FileStorage(index_dir)
 
-    if whoosh.index.exists_in(index_dir_absolute):
+    if whoosh.index.exists_in(index_dir):
         try:
-            shutil.rmtree(index_dir_absolute)
-            os.makedirs(index_dir_absolute)
+            shutil.rmtree(index_dir)
+            os.makedirs(index_dir)
         except e:
             raise PermissionError(_("Das Index-Verzeichnis konnte nicht erstellt werden"))
 
@@ -34,11 +33,11 @@ def create_index(index_dir, data_dir):
 
         for article in files:
             if article.endswith('.md'):
-                article_path=path+"/"+article
+                article_path=os.path.join(os.path.relpath(path, data_dir).strip('./'), article)
 
                 try:
                     # Get file content
-                    with codecs.open(article_path, "r", "utf-8") as f:
+                    with codecs.open(os.path.join(path, article), "r", "utf-8") as f:
                         content = f.read()
                         writer.add_document(path=article_path, content=content)
                 except:
@@ -77,7 +76,8 @@ def search_index(search_str, index_dir, data_dir):
     for r in  results:
         hit = {}
 
-        hit['path'] = "/".join(os.path.normpath(r['path']).split(os.path.sep)[3:])
+#        hit['path'] = "/".join(os.path.normpath(r['path']).split(os.path.sep)[3:])
+        hit['path'] = r['path']
         hit['content'] = r.highlights("content")
         result_set.append(hit)
 

@@ -1,13 +1,26 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for
 from flask_babel import _
 from .whoosh_search import search_index, create_index
+import os
 
 pages_search = Blueprint("pages_search", __name__)
 
 @pages_search.before_app_first_request
 def index_refresh():
-    index_dir = current_app.config['INDEX_DIR']
+    index_dir = os.path.abspath(current_app.config['INDEX_DIR'])
     data_dir = current_app.config['DATA_DIR']
+
+    if not os.path.isdir(index_dir):
+        try:
+            os.makedirs(index_dir)
+        except e:
+            raise PermissionError(_("Das Index-Verzeichnis konnte nicht erstellt werden"))
+
+    if not os.path.isdir(os.path.abspath(data_dir)):
+        try:
+            os.makedirs(os.path.abspath(data_dir))
+        except e:
+            raise PermissionError(_("Das Daten-Verzeichnis konnte nicht erstellt werden"))
 
     create_index(index_dir, data_dir)
 
