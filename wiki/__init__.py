@@ -26,8 +26,9 @@ csrf.init_app(wiki)
 #wiki.config.from_pyfile('settings.py')
 wiki.config.from_object('wiki.default_settings')
 
-
-#wiki.config.from_pyfile('config.py')
+# Laden der benutzerdefinierten Einstellungen (falls vorhanden)
+if os.path.isfile(os.path.join(user_home, *['.wiki', 'settings.py'])):
+    wiki.config.from_pyfile('settings.py')
 
 wiki.secret_key = str(uuid4())
 
