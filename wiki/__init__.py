@@ -9,16 +9,25 @@ from wiki.views.edit import pages_edit
 from wiki.views.create import pages_create
 from wiki.views.search import pages_search
 from wiki.jinja_filters import fix_images
+from pathlib import Path
+import os
+
+user_home = str(Path.home())
 
 csrf = CSRFProtect()
 
-wiki = Flask(__name__)
+#wiki = Flask(__name__, instance_relative_config=True)
+wiki = Flask(__name__, instance_path=os.path.join(user_home, '.wiki'), instance_relative_config=True)
 
 babel = Babel(wiki)
 
 csrf.init_app(wiki)
 
-wiki.config.from_pyfile('settings.py', silent=True)
+#wiki.config.from_pyfile('settings.py')
+wiki.config.from_object('wiki.default_settings')
+
+
+#wiki.config.from_pyfile('config.py')
 
 wiki.secret_key = str(uuid4())
 

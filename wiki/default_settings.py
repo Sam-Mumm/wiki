@@ -10,6 +10,4 @@ INDEX_DIR = os.path.join(BASE_DIR, "static/index")
 
 START_SITE = "README.md"
 
-GIT_TOKEN=""
-
-GIT_URL=""
+GIT_SUPPORT=False
