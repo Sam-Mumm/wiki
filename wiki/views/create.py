@@ -49,7 +49,7 @@ def create(path):
             return redirect(url_for('pages_view.home'))
 
         try:
-            add_document_index(index_dir, data_dir, article_fullpath, form_content)
+            add_document_index(index_dir, data_dir, form_path, form_content)
         except Exception as e:
             flash(str(e))
 

@@ -63,7 +63,7 @@ def edit(path):
 
         # Versuche den Index zu aktualisieren
         try:
-           update_document_index(index_dir, data_dir, article_full_orign_path, article_full_form_path, form_content)
+           update_document_index(index_dir, data_dir, path, form_path, form_content)
         except Exception as e:
            flash(str(e))
 
