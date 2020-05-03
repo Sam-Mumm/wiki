@@ -13,7 +13,7 @@ def create(path):
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
     wiki_name = current_app.config['WIKI_NAME']
-    error=True
+    error = False
 
     start_site_full_path = os.path.join(data_dir, start_site)
 
