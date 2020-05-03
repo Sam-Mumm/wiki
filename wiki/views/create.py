@@ -13,6 +13,7 @@ def create(path):
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
     wiki_name = current_app.config['WIKI_NAME']
+    error=True
 
     start_site_full_path = os.path.join(data_dir, start_site)
 
@@ -55,7 +56,6 @@ def create(path):
 
         return redirect(url_for('pages_view.home') + redirect_path)
 
-
     if path == "home" and not os.path.isfile(start_site_full_path):
         form.path.data = "home"
     elif path == "home" and os.path.exists(start_site_full_path):
@@ -63,4 +63,4 @@ def create(path):
     else:
         form.path.data = path+os.path.sep
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=error)

@@ -15,6 +15,7 @@ def edit(path):
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
     wiki_name = current_app.config['WIKI_NAME']
+    error=True
 
     form = ArticleForm()
 
@@ -97,4 +98,4 @@ def edit(path):
         else:
             form.article_content.data=""
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=error)
