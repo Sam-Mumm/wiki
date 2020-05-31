@@ -10,18 +10,17 @@
         <div class="col-md-6">
            {{ form.path.label(class='control-label') }}
             <div class="form-group">
-
                 {% if form.path.data == 'home' %}
                     {{ form.path(disabled=True, class='form-control') }}
                 {% else %}
-                    {% if error is sameas true %}
+                    {% if error is defined %}
                         {{ form.path(required=required, class='form-control is-invalid') }}
                     {% else %}
                         {{ form.path(required=required, class='form-control') }}
                     {% endif %}
                 {% endif %}
                 <div class="invalid-feedback">
-                    {{ _('Der Pfad ist ungueltig') }}
+                    {{ error }}
                 </div>
             </div>
         </div>

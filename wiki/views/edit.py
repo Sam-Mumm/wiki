@@ -15,7 +15,6 @@ def edit(path):
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
     wiki_name = current_app.config['WIKI_NAME']
-    error = False
 
     form = ArticleForm()
 
@@ -40,6 +39,13 @@ def edit(path):
             redirect_path=""
             form_path = "README"
             path=form_path
+
+        try:
+            form.validate_path(data_dir, form_path)
+        except Exception as e:
+            form.article_content.data = form_content
+            form.path.data = form_path
+            return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=str(e))
 
 #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
@@ -98,4 +104,4 @@ def edit(path):
         else:
             form.article_content.data=""
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=error)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)

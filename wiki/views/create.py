@@ -13,7 +13,6 @@ def create(path):
     index_dir = current_app.config['INDEX_DIR']
     start_site = current_app.config['START_SITE']
     wiki_name = current_app.config['WIKI_NAME']
-    error = False
 
     start_site_full_path = os.path.join(data_dir, start_site)
 
@@ -39,6 +38,14 @@ def create(path):
             redirect_path=""
             form_path = "README"
 
+        try:
+            form.validate_path(data_dir, form_path)
+        except Exception as e:
+            form.article_content.data = form_content
+            form.path.data = form_path
+            return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=str(e))
+
+
 #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
         article_fullpath = os.path.join(data_dir, form_path+".md")
@@ -63,4 +70,4 @@ def create(path):
     else:
         form.path.data = path+os.path.sep
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=error)
+    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)
