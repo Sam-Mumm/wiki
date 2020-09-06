@@ -26,6 +26,9 @@ $ cd /opt/wiki
 
 
 ## Configuration
+### Configurationfile
+
+
 ### Reverse Proxy
 #### nginx
 ```commandline
