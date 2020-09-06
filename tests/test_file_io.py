@@ -1,5 +1,4 @@
 import os
-import sys
 import shutil
 from wiki.views import file_io
 import pytest
