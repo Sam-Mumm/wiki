@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-from wiki import wiki
+from wiki import create_app
 from pathlib import Path
 import argparse
 import os
 
 def start_app():
-    wiki.run(host='0.0.0.0',
-             port=5000)
-
+    wiki=create_app()
+    wiki.run()
 
 def setup_dialog():
     user_home = str(Path.home())

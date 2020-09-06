@@ -14,32 +14,36 @@ import os
 
 user_home = str(Path.home())
 
-csrf = CSRFProtect()
+def create_app(config_filename=None):
+    csrf = CSRFProtect()
 
-#wiki = Flask(__name__, instance_relative_config=True)
-wiki = Flask(__name__, instance_path=os.path.join(user_home, '.wiki'), instance_relative_config=True)
+    wiki = Flask(__name__, instance_path=os.path.join(user_home, '.wiki'), instance_relative_config=True)
 
-babel = Babel(wiki)
+    babel = Babel(wiki)
 
-csrf.init_app(wiki)
+    csrf.init_app(wiki)
+    register_blueprints(wiki)
 
-#wiki.config.from_pyfile('settings.py')
-wiki.config.from_object('wiki.default_settings')
+    return wiki
 
-# Laden der benutzerdefinierten Einstellungen (falls vorhanden)
-if os.path.isfile(os.path.join(user_home, *['.wiki', 'settings.py'])):
-    wiki.config.from_pyfile('settings.py')
 
-wiki.secret_key = str(uuid4())
+def register_blueprints(wiki):
+    wiki.config.from_object('wiki.default_settings')
 
-wiki.register_blueprint(pages_view)
+    # Laden der benutzerdefinierten Einstellungen (falls vorhanden)
+    if os.path.isfile(os.path.join(user_home, *['.wiki', 'settings.py'])):
+        wiki.config.from_pyfile('settings.py')
 
-wiki.register_blueprint(pages_index)
+    wiki.secret_key = str(uuid4())
 
-wiki.register_blueprint(pages_edit)
+    wiki.register_blueprint(pages_view)
 
-wiki.register_blueprint(pages_create)
+    wiki.register_blueprint(pages_index)
 
-wiki.register_blueprint(pages_search)
+    wiki.register_blueprint(pages_edit)
 
-wiki.jinja_env.filters['fix_images'] = jinja_filters.fix_images
+    wiki.register_blueprint(pages_create)
+
+    wiki.register_blueprint(pages_search)
+
+    wiki.jinja_env.filters['fix_images'] = jinja_filters.fix_images
