@@ -66,13 +66,13 @@ def edit(path):
                 moveArticle(article_full_orign_path, article_full_form_path, form_content)
             except Exception as e:
                 flash(str(e))
-                return redirect(url_for('pages_view.home') + redirect_path)
+                return redirect(url_for('pages_view.home') + '/'.join(request.path.split("/")[2:]))
 
         # Versuche den Index zu aktualisieren
         try:
-           update_document_index(index_dir, data_dir, path, form_path, form_content)
+            update_document_index(index_dir, data_dir, path, form_path, form_content)
         except Exception as e:
-           flash(str(e))
+            flash(str(e))
 
         flash(_("Der Artikel wurde erfolgreich aktualisiert"))
         return redirect(url_for('pages_view.home') + redirect_path)

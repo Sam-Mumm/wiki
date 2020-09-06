@@ -45,11 +45,15 @@ def moveArticle(src, dest, content):
     except:
         raise OSError(_("Die Verzeichnisse konnten nicht erstellt werden"))
 
-    # Den Artikel umzubennen / zu verschieben
+    # Pruefen ob an dem Ziel bereits eine Datei/ein Verzeichnis mit dem gleichen Namen existiert
+    if os.path.exists(dest):
+        raise FileExistsError(_("Der Artikel konnte nicht verschoben werden, es existiert bereits eine Datei mit dem gleichen Namen"))
+
+    # Den Artikel umzubennen / verschieben
     try:
         os.rename(src, dest)
-    except FileExistsError:
-        raise FileExistsError(_("Es existiert bereits eine Datei mit dem gleichen Namen"))
+    except PermissionError:
+        raise PermissionError(_("Der Artikel konnte nicht verschoben werden, bitte die Zugriffsrechte prüfen"))
 
     return True
 
