@@ -55,8 +55,12 @@ msgid "Die Verzeichnisse konnten nicht erstellt werden"
 msgstr "The directories could not be created"
 
 #: wiki/views/file_io.py:52
-msgid "Es existiert bereits eine Datei mit dem gleichen Namen"
-msgstr "An article with the same name already exists on this location"
+msgid "Der Artikel konnte nicht verschoben werden, es existiert bereits eine Datei mit dem gleichen Namen"
+msgstr "The acticle could not be moved because on the location an article with the same name already exists"
+
+#: wiki/views/file_io.py:52
+msgid "Der Artikel konnte nicht verschoben werden, bitte die Zugriffsrechte prüfen"
+msgstr "The acticle could not be moved please check permissions"
 
 #: wiki/views/index.py:49 wiki/views/view.py:59
 msgid "Erstellen"
@@ -101,4 +105,3 @@ msgstr "Cancel"
 #: wiki/templates/article_form.tmpl.html
 msgid "Der Pfad ist ungueltig"
 msgstr "The Path is invalid"
-
