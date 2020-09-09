@@ -105,3 +105,10 @@ msgstr "Cancel"
 #: wiki/templates/article_form.tmpl.html
 msgid "Der Pfad ist ungueltig"
 msgstr "The Path is invalid"
+
+#: wiki/templates/article_form.tmpl.html
+msgid "Willkommen"
+msgstr "Welcome"
+
+msgid "Seite nicht gefunden"
+msgstr "Page not found"
