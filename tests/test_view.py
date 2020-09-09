@@ -1,34 +1,42 @@
+from .fixtures.frontend import test_client, app, captured_templates
 import pytest
-from tempfile import mkdtemp
-import shutil
-from wiki import create_app
-
-@pytest.yield_fixture()
-def test_client():
-    app = create_app()
-    testing_client = app.test_client()
-    ctx = app.app_context()
-    ctx.push()
-    tempdir = mkdtemp()
-    yield testing_client
-    ctx.pop()
-    shutil.rmtree(tempdir)
 
 articles = [
                 { "dir": "",
                   "filename": "README.md",
+                  "url": "/",
                   "content_md": "# Hallo Welt",
                   "content_html": "<h1>Hallo Welt</h1>\n"
                 },
                 { "dir": "test",
                   "filename": "article.md",
+                  "url": "/test/article",
                   "content_md": "# Hallo Welt",
                   "content_html": "<h1>Hallo Welt</h1>\n"
                 }
     ]
 
 
-# Erfolgsfall: Zugriff auf die Rohdaten einer Datei, die lesbar ist
+# Test auf einem Wiki mit einem leeren Datenverzeichnis
 @pytest.mark.parametrize("article", articles)
-def test_view(test_client, article):
-    assert True
+def test_wiki_empty(test_client, captured_templates, article):
+    response = test_client.get(article['url'])
+
+    response.status_code == 200
+
+    template, content = captured_templates[0]
+
+    if article['url'] == "/":
+        assert template.name == "markdown_content.tmpl.html"
+        assert content['content'] == "<h1>Willkommen</h1>"
+
+        # Anzahl der Buttons
+        assert len(content['navi']) == 2
+    else:
+        assert template.name == "404.tmpl.html"
+
+        # Anzahl der Buttons
+        assert len(content['navi']) == 0
+
+
+    assert content['wiki_name'] == "My Wiki"
