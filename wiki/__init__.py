@@ -14,10 +14,16 @@ import os
 
 user_home = str(Path.home())
 
-def create_app(config_filename=None):
+def create_app(config_filename="default_settings.py"):
     csrf = CSRFProtect()
 
-    wiki = Flask(__name__, instance_path=os.path.join(user_home, '.wiki'), instance_relative_config=True)
+    wiki = Flask(__name__, instance_path = os.path.join(user_home, '.wiki'), instance_relative_config=True)
+
+    wiki.config.from_object('tests.test_settings')
+
+    # Laden der benutzerdefinierten Einstellungen (falls vorhanden)
+    if os.path.isfile(os.path.join(user_home, *['.wiki', 'settings.py'])):
+        wiki.config.from_pyfile('settings.py')
 
     babel = Babel(wiki)
 
@@ -28,12 +34,6 @@ def create_app(config_filename=None):
 
 
 def register_blueprints(wiki):
-    wiki.config.from_object('wiki.default_settings')
-
-    # Laden der benutzerdefinierten Einstellungen (falls vorhanden)
-    if os.path.isfile(os.path.join(user_home, *['.wiki', 'settings.py'])):
-        wiki.config.from_pyfile('settings.py')
-
     wiki.secret_key = str(uuid4())
 
     wiki.register_blueprint(pages_view)

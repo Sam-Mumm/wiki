@@ -1,4 +1,6 @@
-from .fixtures.conftest import test_client, app, captured_templates
+from .fixtures.conftest import test_client, app, captured_templates, tempdir
+import os
+import codecs
 import pytest
 
 articles = [
@@ -40,3 +42,23 @@ def test_wiki_empty(test_client, captured_templates, article):
 
 
     assert content['wiki_name'] == "My Wiki"
+
+
+# Test auf einem Wiki mit einem leeren Datenverzeichnis
+@pytest.mark.parametrize("article", articles)
+def test_wiki_empty(test_client, captured_templates, tempdir, article):
+    # Anlegen der zu verschiebenden Datei
+    src_path=os.path.join(tempdir, article['dir'])
+
+    os.makedirs(src_path, exist_ok=True)
+
+    with codecs.open(os.path.join(src_path, article['filename']), 'w', 'utf-8') as fh:
+        fh.write(article['content_md'])
+
+    response = test_client.get(article['url'])
+
+    response.status_code == 200
+
+    template, content = captured_templates[0]
+
+    assert template.name == "markdown_content.tmpl.html"
