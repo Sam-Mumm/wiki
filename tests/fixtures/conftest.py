@@ -4,17 +4,20 @@ from tempfile import mkdtemp
 import shutil
 from flask import template_rendered
 
+@pytest.fixture()
+def tempdir():
+    tempdir = mkdtemp()
+    yield tempdir
+    shutil.rmtree(tempdir)
+
+
 @pytest.fixture
 def app():
     wiki = create_app()
     context = wiki.test_request_context()
     context.push()
 
-    tempdir = mkdtemp()
-
     yield wiki
-
-    shutil.rmtree(tempdir)
 
     context.pop()
 

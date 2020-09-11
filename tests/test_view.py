@@ -1,4 +1,4 @@
-from .fixtures.frontend import test_client, app, captured_templates
+from .fixtures.conftest import test_client, app, captured_templates
 import pytest
 
 articles = [

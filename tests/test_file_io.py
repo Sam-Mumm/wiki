@@ -4,12 +4,7 @@ from wiki.views import file_io
 import pytest
 from tempfile import mkdtemp
 import codecs
-
-@pytest.fixture()
-def tempdir():
-    tempdir = mkdtemp()
-    yield tempdir
-    shutil.rmtree(tempdir)
+from .fixtures.conftest import tempdir
 
 articles = [
                 { "dir": "",
