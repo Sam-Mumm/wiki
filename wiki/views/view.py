@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app, redirect, url_for, flash
 from flask_babel import _
-import os, sys
+import os
 from .file_io import readMarkDown
 
 pages_view = Blueprint("pages_view", __name__)
