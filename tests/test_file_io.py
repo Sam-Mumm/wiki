@@ -1,10 +1,7 @@
 import os
-import shutil
 from wiki.views import file_io
 import pytest
-from tempfile import mkdtemp
 import codecs
-from .fixtures.conftest import tempdir
 
 articles = [
                 { "dir": "",

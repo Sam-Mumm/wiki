@@ -13,7 +13,7 @@ def tempdir():
 
 @pytest.fixture()
 def app(tempdir):
-    wiki = create_app()
+    wiki = create_app("tests.test_settings")
 
     wiki.config['DATA_DIR']=tempdir
 
