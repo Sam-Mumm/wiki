@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, current_app, request, redirect, ur
 from .file_io import createArticle
 from .article_form import ArticleForm
 from .whoosh_search import add_document_index
-import os, sys
+import os
 
 pages_create = Blueprint("pages_create", __name__)
 

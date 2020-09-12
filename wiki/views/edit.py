@@ -3,7 +3,7 @@ from .article_form import ArticleForm
 from flask_babel import _
 from .file_io import readRaw, updateArticle, moveArticle
 from .whoosh_search import update_document_index
-import os, sys
+import os
 
 pages_edit = Blueprint("pages_edit", __name__)
 

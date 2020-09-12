@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, current_app, redirect, url_for
 from flask_babel import _
-import os, sys
-import markdown2
+import os
 from datetime import datetime
 
 pages_index = Blueprint("pages_index", __name__)

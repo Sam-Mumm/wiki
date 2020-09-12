@@ -3,7 +3,7 @@ import whoosh.index
 from whoosh.qparser import QueryParser
 from whoosh.filedb.filestore import FileStorage
 from whoosh.highlight import ContextFragmenter
-import os, sys, shutil
+import os, shutil
 import codecs
 from flask_babel import _
 
@@ -50,7 +50,6 @@ def create_index(index_dir, data_dir):
 
 
 def search_index(search_str, index_dir, data_dir):
-    msg = ""
     result_set = []
     index_dir_absolute = os.path.abspath(index_dir)
 
