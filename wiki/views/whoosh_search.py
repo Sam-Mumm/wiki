@@ -18,7 +18,7 @@ def create_index(index_dir, data_dir):
         try:
             shutil.rmtree(index_dir)
             os.makedirs(index_dir)
-        except e:
+        except:
             raise PermissionError(_("Das Index-Verzeichnis konnte nicht erstellt werden"))
 
     idx = storage_obj.create_index(schema)

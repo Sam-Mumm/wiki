@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, request, redirect, url_for
+from flask import Blueprint, render_template, current_app, request
 from flask_babel import _
 from .whoosh_search import search_index, create_index
 import os
@@ -13,13 +13,13 @@ def index_refresh():
     if not os.path.isdir(index_dir):
         try:
             os.makedirs(index_dir)
-        except e:
+        except:
             raise PermissionError(_("Das Index-Verzeichnis konnte nicht erstellt werden"))
 
     if not os.path.isdir(os.path.abspath(data_dir)):
         try:
             os.makedirs(os.path.abspath(data_dir))
-        except e:
+        except:
             raise PermissionError(_("Das Daten-Verzeichnis konnte nicht erstellt werden"))
 
     create_index(index_dir, data_dir)

@@ -11,8 +11,8 @@ articles = [
                 },
                 { "dir": "test",
                   "filename": "article.md",
-                  "content_md": "# Hallo Welt",
-                  "content_html": "<h1>Hallo Welt</h1>\n"
+                  "content_md": "# Hello World",
+                  "content_html": "<h1>Hello World</h1>\n"
                 }
     ]
 

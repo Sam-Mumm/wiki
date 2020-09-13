@@ -62,3 +62,4 @@ def test_view_article(test_client, captured_templates, article):
     assert content['wiki_name'] == "My Testwiki"
     assert template.name == "markdown_content.tmpl.html"
     assert content['content'] == article['content_html']
+    assert len(content['navi']) == 2
