@@ -14,7 +14,7 @@ import os
 
 user_home = str(Path.home())
 
-def create_app(config_filename="default_settings"):
+def create_app(config_filename="wiki.default_settings"):
     csrf = CSRFProtect()
 
     wiki = Flask(__name__, instance_path = os.path.join(user_home, '.wiki'), instance_relative_config=True)
