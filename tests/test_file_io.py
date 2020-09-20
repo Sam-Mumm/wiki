@@ -146,12 +146,8 @@ def test_updateArticle_no_permissions(tempdir, article):
 
 
 # Erfolgsfall: Verschieben von einem Artikel
-@pytest.mark.parametrize("article", articles)
+@pytest.mark.parametrize("article", articles[1:])
 def test_moveArticle(tempdir, article):
-    # Verschieben der README.md wird durch die Oberfläche unterbunden
-    if article['filename']=="README.md":
-        pytest.skip()
-
     # Definition des Zielverzeichnisses
     dest_path=os.path.join(tempdir, "targetdir")
 
@@ -176,12 +172,8 @@ def test_moveArticle(tempdir, article):
 
 
 # Fehlerfall: Verschieben einer Datei in ein Zielverzeichnis auf das der User keine Schreibrechte hat
-@pytest.mark.parametrize("article", articles)
+@pytest.mark.parametrize("article", articles[1:])
 def test_moveArticle_no_dir_permissions(tempdir, article):
-    # Verschieben der README.md wird durch die Oberfläche unterbunden
-    if article['filename']=="README.md":
-        pytest.skip()
-
     # Anlegen der zu verschiebenden Datei
     src_path=os.path.join(tempdir, article['dir'])
     os.makedirs(src_path, exist_ok=True)
@@ -202,12 +194,8 @@ def test_moveArticle_no_dir_permissions(tempdir, article):
 
 
 # Fehlerfall: Verschieben einer Datei in ein Zielverzeichnis wo bereits eine Datei mit dem gleichen Namen existiert
-@pytest.mark.parametrize("article", articles)
+@pytest.mark.parametrize("article", articles[1:])
 def test_moveArticle_target_file_exist(tempdir, article):
-    # Verschieben der README.md wird durch die Oberfläche unterbunden
-    if article['filename']=="README.md":
-        pytest.skip()
-
     # Anlegen der zu verschiebenden Datei
     src_path=os.path.join(tempdir, article['dir'])
     os.makedirs(src_path, exist_ok=True)

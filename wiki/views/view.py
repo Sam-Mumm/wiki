@@ -32,8 +32,7 @@ def home(path):
             try:
                 content = readMarkDown(full_path+".md")
             except Exception as e:
-                flash(str(e))
-                return redirect(url_for('pages_view.home'))
+                return render_template('404.tmpl.html', navi=[], wiki_name=wiki_name)
 
             return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
         elif os.path.isdir(full_path):
@@ -49,7 +48,7 @@ def home(path):
                 content = readMarkDown(start_site_full_path)
             except Exception as e:
                 flash(str(e))
-                content = ""
+                content = "<h1>"+_('Willkommen')+"</h1>"
 
             navi_buttons.append(
                 {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _('Bearbeiten')}
