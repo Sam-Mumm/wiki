@@ -3,7 +3,7 @@ from flask_babel import _
 from ..utils.whoosh_search import search_index, create_index
 import os
 
-pages_search = Blueprint("pages_search", __name__)
+pages_search = Blueprint("pages_search", __name__, template_folder='templates')
 
 @pages_search.before_app_first_request
 def index_refresh():

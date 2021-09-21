@@ -5,7 +5,7 @@ from ..utils.file_io import readRaw, updateArticle, moveArticle
 from ..utils.whoosh_search import update_document_index
 import os
 
-pages_edit = Blueprint("pages_edit", __name__)
+pages_edit = Blueprint("pages_edit", __name__, template_folder='templates')
 
 @pages_edit.route('/edit', defaults={'path': 'home'}, methods=["GET","POST"])
 @pages_edit.route('/edit/<path:path>', methods=["GET","POST"])

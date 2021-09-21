@@ -4,7 +4,7 @@ from .article_form import ArticleForm
 from ..utils.whoosh_search import add_document_index
 import os
 
-pages_create = Blueprint("pages_create", __name__)
+pages_create = Blueprint("pages_create", __name__, template_folder='templates')
 
 @pages_create.route('/create', defaults={'path': 'home'}, methods=["GET","POST"])
 @pages_create.route('/create/<path:path>', methods=["GET","POST"])
