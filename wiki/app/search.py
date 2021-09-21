@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app, request
 from flask_babel import _
-from .whoosh_search import search_index, create_index
+from ..utils.whoosh_search import search_index, create_index
 import os
 
 pages_search = Blueprint("pages_search", __name__)

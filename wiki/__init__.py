@@ -3,11 +3,11 @@ from flask import Flask
 from flask_babel import Babel
 from uuid import uuid4
 from flask_wtf.csrf import CSRFProtect
-from wiki.views.view import pages_view
-from wiki.views.index import pages_index
-from wiki.views.edit import pages_edit
-from wiki.views.create import pages_create
-from wiki.views.search import pages_search
+from wiki.app.view import pages_view
+from wiki.app.index import pages_index
+from wiki.app.edit import pages_edit
+from wiki.app.create import pages_create
+from wiki.app.search import pages_search
 from wiki.jinja_filters import fix_images
 from pathlib import Path
 import os

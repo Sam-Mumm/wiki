@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for, flash
 from .article_form import ArticleForm
 from flask_babel import _
-from .file_io import readRaw, updateArticle, moveArticle
-from .whoosh_search import update_document_index
+from ..utils.file_io import readRaw, updateArticle, moveArticle
+from ..utils.whoosh_search import update_document_index
 import os
 
 pages_edit = Blueprint("pages_edit", __name__)
