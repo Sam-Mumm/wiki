@@ -3,16 +3,18 @@ from ..utils.file_io import createArticle
 from .article_form import ArticleForm
 from ..utils.whoosh_search import add_document_index
 import os
+from ..utils import magic
 
 pages_create = Blueprint("pages_create", __name__, template_folder='templates')
+
 
 @pages_create.route('/create', defaults={'path': 'home'}, methods=["GET","POST"])
 @pages_create.route('/create/<path:path>', methods=["GET","POST"])
 def create(path):
-    data_dir = current_app.config['DATA_DIR']
-    index_dir = current_app.config['INDEX_DIR']
-    start_site = current_app.config['START_SITE']
-    wiki_name = current_app.config['WIKI_NAME']
+    data_dir = current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
+    index_dir = current_app.config[magic.CONFIGFILE_KEY_INDEX_DIR]
+    start_site = current_app.config[magic.CONFIGFILE_KEY_START_SITE]
+    wiki_name = current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]
 
     start_site_full_path = os.path.join(data_dir, start_site)
 
@@ -20,10 +22,10 @@ def create(path):
 
     # Which Buttons should shown? (here: Index)
     navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'},
+        {'endpoint': 'pages_index.index', 'path': '', 'name': magic.LBL_INDEX},
     ]
 
-    if request.method == 'POST':
+    if request.method == magic.HTTP_REQUEST_METHOD_POST:
 
         # wurde der Abbruch-Button gedrueckt?
         if "cancel" in request.form:
@@ -48,7 +50,7 @@ def create(path):
 
 #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
-        article_fullpath = os.path.join(data_dir, form_path+".md")
+        article_fullpath = os.path.join(data_dir, form_path + magic.MARKDOWN_FILE_EXTENSION)
 
         try:
             createArticle(article_fullpath, form_content)

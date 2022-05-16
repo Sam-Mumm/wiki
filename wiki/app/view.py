@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, current_app, redirect, url_for, fl
 from flask_babel import _
 import os
 from ..utils.file_io import readMarkDown
+from ..utils import magic
 
 pages_view = Blueprint("pages_view", __name__, template_folder='templates')
 
@@ -11,26 +12,26 @@ pages_view = Blueprint("pages_view", __name__, template_folder='templates')
 def home(path):
     # Which Buttons should shown? (Edit, Index)
     navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': 'Index'}
+        {'endpoint': 'pages_index.index', 'path': '', 'name': magic.LBL_INDEX}
     ]
 
-    data_dir=current_app.config['DATA_DIR']
-    wiki_name=current_app.config['WIKI_NAME']
-    start_site=current_app.config['START_SITE']
+    data_dir=current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
+    wiki_name=current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]
+    start_site=current_app.config[magic.CONFIGFILE_KEY_START_SITE]
 
     # Wurde eine Dateiendung mit angegeben?
-    if path.endswith(".md"):
+    if path.endswith(magic.MARKDOWN_FILE_EXTENSION):
         return redirect(url_for('pages_view.home')+os.path.splitext(path)[0])
     if path != 'home':
         full_path = os.path.join(data_dir, path)
 
-        if os.path.isfile(full_path+".md"):
+        if os.path.isfile(full_path + magic.MARKDOWN_FILE_EXTENSION):
             navi_buttons.append(
-                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _('Bearbeiten')}
+                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _(magic.LBL_EDIT)}
             )
 
             try:
-                content = readMarkDown(full_path+".md")
+                content = readMarkDown(full_path + magic.MARKDOWN_FILE_EXTENSION)
             except Exception as e:
                 return render_template('404.tmpl.html', navi=[], wiki_name=wiki_name)
 
@@ -51,11 +52,11 @@ def home(path):
                 content = "<h1>"+_('Willkommen')+"</h1>"
 
             navi_buttons.append(
-                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _('Bearbeiten')}
+                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _(magic.LBL_EDIT)}
             )
         else:
             navi_buttons.append(
-                {'endpoint': 'pages_create.create', 'path': "", 'name': _('Erstellen')}
+                {'endpoint': 'pages_create.create', 'path': "", 'name': _(magic.LBL_CREATE)}
             )
 
             content="<h1>"+_('Willkommen')+"</h1>"

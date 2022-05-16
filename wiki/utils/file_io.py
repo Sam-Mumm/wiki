@@ -2,13 +2,14 @@ from flask_babel import _
 import markdown2
 import codecs
 import os
+from ..utils import magic
 
 # Auslesen eines Artikels (=Datei) einschliesslich Markdown-Parsing
 def readMarkDown(path):
     try:
         return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks", "break-on-newline"])
     except:
-        raise PermissionError(_("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen"))
+        raise PermissionError(_(magic.MSG_NO_READ_PERMISSION))
 
 
 # Auslesen eines Artikels (=Datei) ohne Parsing
@@ -17,7 +18,7 @@ def readRaw(path):
         with codecs.open(path, 'r', 'utf-8') as fh:
             content = fh.read()
     except:
-        raise PermissionError(_("Der Artikel konnte nicht gelesen werden, bitte die Zugriffsrechte überprüfen"))
+        raise PermissionError(_(magic.MSG_NO_READ_PERMISSION))
 
     return content
 
@@ -28,7 +29,7 @@ def updateArticle(path, content):
         with codecs.open(path, 'w+', 'utf-8') as fh:
             fh.write(content)
     except:
-        raise PermissionError(_("Der Artikel konnte nicht geschrieben werden, bitte die Zugriffsrechte prüfen"))
+        raise PermissionError(_(magic.MSG_NO_WRITE_PERMISSION))
 
     return True
 
@@ -43,17 +44,17 @@ def moveArticle(src, dest, content):
     try:
         os.makedirs(dest_path, exist_ok=True)
     except:
-        raise OSError(_("Die Verzeichnisse konnten nicht erstellt werden"))
+        raise OSError(_(magic.MSG_DIR_CANNOT_BE_CREATED))
 
     # Pruefen ob an dem Ziel bereits eine Datei/ein Verzeichnis mit dem gleichen Namen existiert
     if os.path.exists(dest):
-        raise FileExistsError(_("Der Artikel konnte nicht verschoben werden, es existiert bereits eine Datei mit dem gleichen Namen"))
+        raise FileExistsError(_(magic.MSG_FILE_CANNOT_BE_MOVED_SAME_NAME_EXISTS))
 
     # Den Artikel umzubennen / verschieben
     try:
         os.rename(src, dest)
     except PermissionError:
-        raise PermissionError(_("Der Artikel konnte nicht verschoben werden, bitte die Zugriffsrechte prüfen"))
+        raise PermissionError(_(magic.MSG_FILE_CANNOT_BE_MOVE_NO_PERMISSION))
 
     return True
 
@@ -62,7 +63,7 @@ def moveArticle(src, dest, content):
 def createArticle(article_fullpath, content):
     # Existiert bereits eine Datei/Verzeichnis mit dem gleichen Namen?
     if os.path.exists(article_fullpath):
-        raise FileExistsError(_("Es existiert bereits eine Datei mit dem gleichen Namen"))
+        raise FileExistsError(_(magic.MSG_FILE_CANNOT_BE_CREATE_SAME_NAME_EXISTS))
 
     # extrahieren des Verzeichnisnamens aus dem Pfad
     dest_path = os.path.dirname(article_fullpath)
@@ -71,6 +72,6 @@ def createArticle(article_fullpath, content):
     try:
         os.makedirs(dest_path, exist_ok=True)
     except Exception as e:
-        raise OSError(_("Die Verzeichnisse konnten nicht erstellt werden"))
+        raise OSError(_(magic.MSG_DIR_CANNOT_BE_CREATED))
 
     return updateArticle(article_fullpath, content)

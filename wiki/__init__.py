@@ -11,19 +11,20 @@ from wiki.app.search import pages_search
 from wiki.jinja_filters import fix_images
 from pathlib import Path
 import os
+from utils import magic
 
 user_home = str(Path.home())
 
 def create_app(config_filename="wiki.default_settings"):
     csrf = CSRFProtect()
 
-    wiki = Flask(__name__, instance_path = os.path.join(user_home, '.wiki'), instance_relative_config=True)
+    wiki = Flask(__name__, instance_path = os.path.join(user_home, magic.USER_WIKI_SETTINGS_FOLDER), instance_relative_config=True)
 
     wiki.config.from_object(config_filename)
 
     # Laden der benutzerdefinierten Einstellungen (falls vorhanden)
-    if os.path.isfile(os.path.join(user_home, *['.wiki', 'settings.py'])):
-        wiki.config.from_pyfile('settings.py')
+    if os.path.isfile(os.path.join(user_home, *[magic.USER_WIKI_SETTINGS_FOLDER, magic.SETTINGS_FILE])):
+        wiki.config.from_pyfile(magic.SETTINGS_FILE)
 
     babel = Babel(wiki)
 

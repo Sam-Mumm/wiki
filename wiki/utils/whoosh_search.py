@@ -6,6 +6,7 @@ from whoosh.highlight import ContextFragmenter
 import os, shutil
 import codecs
 from flask_babel import _
+from ..utils import magic
 
 # Erstellt von data_dir einen neuen Index in index_dir.
 # Liefert True zurueck wenn die indizierung erfolgreich war
@@ -19,7 +20,7 @@ def create_index(index_dir, data_dir):
             shutil.rmtree(index_dir)
             os.makedirs(index_dir)
         except:
-            raise PermissionError(_("Das Index-Verzeichnis konnte nicht erstellt werden"))
+            raise PermissionError(_(magic.MSG_INDEX_DIR_CANNOT_BE_CREATED))
 
     idx = storage_obj.create_index(schema)
 
@@ -28,11 +29,11 @@ def create_index(index_dir, data_dir):
     # Iteriere über alle Dateien die auf .md enden
     for (path, dirs, files) in os.walk(data_dir):
         # Remove the git-Folder
-        if '.git' in dirs:
-            dirs.remove('.git')
+        if magic.GIT_SYS_FOLDER in dirs:
+            dirs.remove(magic.GIT_SYS_FOLDER)
 
         for article in files:
-            if article.endswith('.md'):
+            if article.endswith(magic.MARKDOWN_FILE_EXTENSION):
                 article_path=os.path.join(os.path.relpath(path, data_dir).strip('./'), article)
 
                 try:
@@ -42,7 +43,6 @@ def create_index(index_dir, data_dir):
                         writer.add_document(path=article_path, content=content)
                 except:
                     continue
-
 
     writer.commit()
 
@@ -68,10 +68,10 @@ def search_index(search_str, index_dir, data_dir):
     results.fragmenter = whoosh.highlight.ContextFragmenter(surround=20)
 
     if len(results) == 0:
-        msg = _("Es gab fuer den Suchstring {} keine Treffer").format(search_str)
+        msg = _(magic.MSG_NO_SEARCH_RESULTS).format(search_str)
         return msg, result_set
 
-    msg = _("Es wurden {count_hits} Treffer fuer die Suchanfrage {search_str} gefunden").format(count_hits=str(len(results)), search_str=search_str)
+    msg = _(magic.MSG_SEARCH_RESULTS).format(count_hits=str(len(results)), search_str=search_str)
     for r in  results:
         hit = {}
 
