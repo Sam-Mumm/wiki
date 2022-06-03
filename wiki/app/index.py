@@ -3,6 +3,7 @@ from flask_babel import _
 import os
 from datetime import datetime
 from ..utils import magic
+from wiki.config import all_endpoints
 
 pages_index = Blueprint("pages_index", __name__)
 
@@ -46,9 +47,9 @@ def index(path):
     else:
         create_path=''
 
-    navi_buttons = [
-        {'endpoint': 'pages_create.create', 'path': create_path, 'name': _(magic.LBL_CREATE)},
-    ]
+    navi_element = all_endpoints.get('create')
+    navi_element['parameter'] = {'path': path}
+    navi_buttons = [navi_element]
 
     data_dir=current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
     wiki_name=current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]

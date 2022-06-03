@@ -5,6 +5,7 @@ from ..utils.file_io import readRaw, updateArticle, moveArticle
 from ..utils.whoosh_search import update_document_index
 import os
 from ..utils import magic
+from wiki.config import all_endpoints
 
 pages_edit = Blueprint("pages_edit", __name__, template_folder='templates')
 
@@ -19,10 +20,11 @@ def edit(path):
 
     form = ArticleForm()
 
-    # Which Buttons should shown? (here: Index)
-    navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': magic.LBL_INDEX},
-    ]
+    # Which Buttons should shown? (Create, Index)
+    navi_element = all_endpoints.get('create')
+    navi_element['parameter'] = {'path': path}
+
+    navi_buttons = [all_endpoints.get('index'), navi_element]
 
     # Wurde der Speicher-Button gedrueckt?
     if request.method == magic.HTTP_REQUEST_METHOD_POST:

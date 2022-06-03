@@ -3,6 +3,7 @@ from flask_babel import _
 from ..utils.whoosh_search import search_index, create_index
 import os
 from ..utils import magic
+from wiki.config import all_endpoints
 
 pages_search = Blueprint("pages_search", __name__, template_folder='templates')
 
@@ -32,9 +33,8 @@ def search():
     data_dir = current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
     wiki_name = current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]
 
-    navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': magic.LBL_INDEX}
-    ]
+    # Which Buttons should shown? (Create, Index)
+    navi_buttons = [all_endpoints.get('index'), all_endpoints.get('create')]
 
     if request.method != magic.HTTP_REQUEST_METHOD_POST:
         msg = _(magic.MSG_NO_SEARCH_PHRASE)

@@ -3,6 +3,7 @@ from flask_babel import _
 import os
 from ..utils.file_io import readMarkDown
 from ..utils import magic
+from wiki.config import all_endpoints
 
 pages_view = Blueprint("pages_view", __name__, template_folder='templates')
 
@@ -10,10 +11,11 @@ pages_view = Blueprint("pages_view", __name__, template_folder='templates')
 @pages_view.route('/', defaults={'path': 'home'})
 @pages_view.route('/<path:path>')
 def home(path):
-    # Which Buttons should shown? (Edit, Index)
-    navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': magic.LBL_INDEX}
-    ]
+    # Which Buttons should shown? (Create, Index)
+    navi_element = all_endpoints.get('create')
+    navi_element['parameter'] = {'path': path}
+
+    navi_buttons = [all_endpoints.get('index'), navi_element]
 
     data_dir=current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
     wiki_name=current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]
@@ -26,9 +28,9 @@ def home(path):
         full_path = os.path.join(data_dir, path)
 
         if os.path.isfile(full_path + magic.MARKDOWN_FILE_EXTENSION):
-            navi_buttons.append(
-                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _(magic.LBL_EDIT)}
-            )
+            navi_element=all_endpoints.get('edit')
+            navi_element['parameter'] = { 'path': path }
+            navi_buttons.append(navi_element)
 
             try:
                 content = readMarkDown(full_path + magic.MARKDOWN_FILE_EXTENSION)
@@ -44,22 +46,11 @@ def home(path):
         start_site_full_path = os.path.join(data_dir, start_site)
 
         if os.path.exists(start_site_full_path):
-
             try:
                 content = readMarkDown(start_site_full_path)
             except Exception as e:
                 flash(str(e))
                 content = "<h1>"+_('Willkommen')+"</h1>"
-
-            navi_buttons.append(
-                {'endpoint': 'pages_edit.edit', 'path': "/" + path, 'name': _(magic.LBL_EDIT)}
-            )
-        else:
-            navi_buttons.append(
-                {'endpoint': 'pages_create.create', 'path': "", 'name': _(magic.LBL_CREATE)}
-            )
-
-            content="<h1>"+_('Willkommen')+"</h1>"
 
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
 

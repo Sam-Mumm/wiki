@@ -4,6 +4,7 @@ from .article_form import ArticleForm
 from ..utils.whoosh_search import add_document_index
 import os
 from ..utils import magic
+from wiki.config import all_endpoints
 
 pages_create = Blueprint("pages_create", __name__, template_folder='templates')
 
@@ -21,9 +22,7 @@ def create(path):
     form = ArticleForm()
 
     # Which Buttons should shown? (here: Index)
-    navi_buttons = [
-        {'endpoint': 'pages_index.index', 'path': '', 'name': magic.LBL_INDEX},
-    ]
+    navi_buttons = [all_endpoints.get('index')]
 
     if request.method == magic.HTTP_REQUEST_METHOD_POST:
 
