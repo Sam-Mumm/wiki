@@ -24,6 +24,7 @@ def home(path):
     # Wurde eine Dateiendung mit angegeben?
     if path.endswith(magic.MARKDOWN_FILE_EXTENSION):
         return redirect(url_for('pages_view.home')+os.path.splitext(path)[0])
+
     if path != 'home':
         full_path = os.path.join(data_dir, path)
 
@@ -35,13 +36,13 @@ def home(path):
             try:
                 content = readMarkDown(full_path + magic.MARKDOWN_FILE_EXTENSION)
             except Exception as e:
-                return render_template('404.tmpl.html', navi=[], wiki_name=wiki_name)
+                return render_template('404.tmpl.html', navi=navi_buttons, wiki_name=wiki_name)
 
             return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
         elif os.path.isdir(full_path):
-            return redirect(url_for('pages_index.index')+"/"+path)
+            return redirect(url_for('pages_index.index', path=path))
         else:
-            return render_template('404.tmpl.html', navi=[], wiki_name=wiki_name)
+            return render_template('404.tmpl.html', navi=navi_buttons, wiki_name=wiki_name)
     else:
         start_site_full_path = os.path.join(data_dir, start_site)
 
@@ -50,7 +51,8 @@ def home(path):
                 content = readMarkDown(start_site_full_path)
             except Exception as e:
                 flash(str(e))
-                content = "<h1>"+_('Willkommen')+"</h1>"
+        else:
+            content = "<h1>"+_('Willkommen')+"</h1>"
 
         return render_template('markdown_content.tmpl.html', content=content, navi=navi_buttons, wiki_name=wiki_name)
 

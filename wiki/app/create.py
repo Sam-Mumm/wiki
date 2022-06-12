@@ -25,44 +25,7 @@ def create(path):
     navi_buttons = [all_endpoints.get('index')]
 
     if request.method == magic.HTTP_REQUEST_METHOD_POST:
-
-        # wurde der Abbruch-Button gedrueckt?
-        if "cancel" in request.form:
-            return redirect(url_for('pages_view.index') + path)
-
-        form_content = request.form['article_content']
-
-        if 'path' in request.form:
-            form_path = request.form['path'].replace(" ", "_").strip(os.path.sep)
-            redirect_path=form_path
-        else:
-            redirect_path=""
-            form_path = "README"
-
-        try:
-            form.validate_path(data_dir, form_path)
-        except Exception as e:
-            form.article_content.data = form_content
-            form.path.data = form_path
-            return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name, error=str(e))
-
-
-#        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
-
-        article_fullpath = os.path.join(data_dir, form_path + magic.MARKDOWN_FILE_EXTENSION)
-
-        try:
-            createArticle(article_fullpath, form_content)
-        except Exception as e:
-            flash(str(e))
-            return redirect(url_for('pages_view.home'))
-
-        try:
-            add_document_index(index_dir, data_dir, form_path, form_content)
-        except Exception as e:
-            flash(str(e))
-
-        return redirect(url_for('pages_view.home') + redirect_path)
+        return form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name)
 
     if path == "home" and not os.path.isfile(start_site_full_path):
         form.path.data = "home"
@@ -72,3 +35,45 @@ def create(path):
         form.path.data = path+os.path.sep
 
     return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)
+
+
+def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
+
+    # wurde der Abbruch-Button gedrueckt?
+    if "cancel" in request.form:
+        return redirect(url_for('pages_view.index', path=path))
+
+    form_content = request.form['article_content']
+
+    if 'path' in request.form:
+        form_path = request.form['path'].replace(" ", "_").strip(os.path.sep)
+        redirect_path = form_path
+    else:
+        redirect_path = ""
+        form_path = "README"
+
+    try:
+        form.validate_path(data_dir, form_path)
+    except Exception as e:
+        form.article_content.data = form_content
+        form.path.data = form_path
+        return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name,
+                               error=str(e))
+
+    #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
+
+    article_fullpath = os.path.join(data_dir, form_path + magic.MARKDOWN_FILE_EXTENSION)
+
+    try:
+        createArticle(article_fullpath, form_content)
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('pages_view.home'))
+
+    # Aktualisieren des Suchindex
+    try:
+        add_document_index(index_dir, data_dir, form_path, form_content)
+    except Exception as e:
+        flash(str(e))
+
+    return redirect(url_for('pages_view.home', path=redirect_path))

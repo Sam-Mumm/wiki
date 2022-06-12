@@ -63,7 +63,7 @@ def index(path):
             return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content, navi=navi_buttons)
         # Referenziert der Eintrag in der URL auf eine Datei auf root-Ebene?
         elif os.path.isfile(full_path + magic.MARKDOWN_FILE_EXTENSION):
-            return redirect(url_for('pages_view.home')+path)
+            return redirect(url_for('pages_view.home', path=path))
         else:
             return render_template('404.tmpl.html')
 
