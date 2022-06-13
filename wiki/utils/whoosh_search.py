@@ -6,7 +6,7 @@ from whoosh.highlight import ContextFragmenter
 import os, shutil
 import codecs
 from flask_babel import _
-from ..utils import magic
+from wiki.constants import *
 
 # Erstellt von data_dir einen neuen Index in index_dir.
 # Liefert True zurueck wenn die indizierung erfolgreich war
@@ -20,7 +20,7 @@ def create_index(index_dir, data_dir):
             shutil.rmtree(index_dir)
             os.makedirs(index_dir)
         except:
-            raise PermissionError(_(magic.MSG_INDEX_DIR_CANNOT_BE_CREATED))
+            raise PermissionError(_(MSG_INDEX_DIR_CANNOT_BE_CREATED))
 
     idx = storage_obj.create_index(schema)
 
@@ -29,11 +29,11 @@ def create_index(index_dir, data_dir):
     # Iteriere über alle Dateien die auf .md enden
     for (path, dirs, files) in os.walk(data_dir):
         # Remove the git-Folder
-        if magic.GIT_SYS_FOLDER in dirs:
-            dirs.remove(magic.GIT_SYS_FOLDER)
+        if GIT_SYS_FOLDER in dirs:
+            dirs.remove(GIT_SYS_FOLDER)
 
         for article in files:
-            if article.endswith(magic.MARKDOWN_FILE_EXTENSION):
+            if article.endswith(MARKDOWN_FILE_EXTENSION):
                 article_path=os.path.join(os.path.relpath(path, data_dir).strip('./'), article)
 
                 try:
@@ -68,10 +68,10 @@ def search_index(search_str, index_dir, data_dir):
     results.fragmenter = whoosh.highlight.ContextFragmenter(surround=20)
 
     if len(results) == 0:
-        msg = _(magic.MSG_NO_SEARCH_RESULTS).format(search_str)
+        msg = _(MSG_NO_SEARCH_RESULTS).format(search_str)
         return msg, result_set
 
-    msg = _(magic.MSG_SEARCH_RESULTS).format(count_hits=str(len(results)), search_str=search_str)
+    msg = _(MSG_SEARCH_RESULTS).format(count_hits=str(len(results)), search_str=search_str)
     for r in  results:
         hit = {}
 

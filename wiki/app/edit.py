@@ -4,7 +4,7 @@ from flask_babel import _
 from ..utils.file_io import readRaw, updateArticle, moveArticle
 from ..utils.whoosh_search import update_document_index
 import os
-from ..utils import magic
+from wiki.constants import *
 from wiki.config import all_endpoints
 
 pages_edit = Blueprint("pages_edit", __name__, template_folder='templates')
@@ -13,10 +13,10 @@ pages_edit = Blueprint("pages_edit", __name__, template_folder='templates')
 @pages_edit.route('/edit/<path:path>', methods=["GET","POST"])
 def edit(path):
     # Holen der Einstellungen aus der settings.py
-    data_dir = current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
-    index_dir = current_app.config[magic.CONFIGFILE_KEY_INDEX_DIR]
-    start_site = current_app.config[magic.CONFIGFILE_KEY_START_SITE]
-    wiki_name = current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]
+    data_dir = current_app.config[CONFIGFILE_KEY_DATA_DIR]
+    index_dir = current_app.config[CONFIGFILE_KEY_INDEX_DIR]
+    start_site = current_app.config[CONFIGFILE_KEY_START_SITE]
+    wiki_name = current_app.config[CONFIGFILE_KEY_WIKI_NAME]
 
     form = ArticleForm()
 
@@ -27,7 +27,7 @@ def edit(path):
     navi_buttons = [all_endpoints.get('index'), navi_element]
 
     # Wurde der Speicher-Button gedrueckt?
-    if request.method == magic.HTTP_REQUEST_METHOD_POST:
+    if request.method == HTTP_REQUEST_METHOD_POST:
         return form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name)
 
     return load_form_data(data_dir, form, navi_buttons, path, start_site, wiki_name)
@@ -38,7 +38,7 @@ def load_form_data(data_dir, form, navi_buttons, path, start_site, wiki_name):
 
     # Ist die zu bearbeitende Seite die Startseite?
     if path != 'home':
-        article_file = os.path.join(data_dir, path + magic.MARKDOWN_FILE_EXTENSION)
+        article_file = os.path.join(data_dir, path + MARKDOWN_FILE_EXTENSION)
 
         if not os.path.isfile(article_file):
             return render_template('404.tmpl.html', wiki_name=wiki_name)
@@ -89,8 +89,8 @@ def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
 
     #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
-    article_full_form_path = os.path.join(data_dir, form_path + magic.MARKDOWN_FILE_EXTENSION)
-    article_full_origin_path = os.path.join(data_dir, path + magic.MARKDOWN_FILE_EXTENSION)
+    article_full_form_path = os.path.join(data_dir, form_path + MARKDOWN_FILE_EXTENSION)
+    article_full_origin_path = os.path.join(data_dir, path + MARKDOWN_FILE_EXTENSION)
 
     # Wurde der Artikel auch verschoben?
     if article_full_origin_path == article_full_form_path:
@@ -114,5 +114,5 @@ def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
     except Exception as e:
         flash(str(e))
 
-    flash(_(magic.MSG_UPDATE_SUCCESSFUL))
+    flash(_(MSG_UPDATE_SUCCESSFUL))
     return redirect(url_for('pages_view.home', path=redirect_path))

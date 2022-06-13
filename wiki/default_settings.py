@@ -11,3 +11,5 @@ INDEX_DIR = os.path.join(BASE_DIR, "static/index")
 START_SITE = "README.md"
 
 GIT_SUPPORT=False
+
+UI=True

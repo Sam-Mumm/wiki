@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, current_app, redirect, url_for, fl
 from flask_babel import _
 import os
 from ..utils.file_io import readMarkDown
-from ..utils import magic
+from wiki.constants import *
 from wiki.config import all_endpoints
 
 pages_view = Blueprint("pages_view", __name__, template_folder='templates')
@@ -17,24 +17,24 @@ def home(path):
 
     navi_buttons = [all_endpoints.get('index'), navi_element]
 
-    data_dir=current_app.config[magic.CONFIGFILE_KEY_DATA_DIR]
-    wiki_name=current_app.config[magic.CONFIGFILE_KEY_WIKI_NAME]
-    start_site=current_app.config[magic.CONFIGFILE_KEY_START_SITE]
+    data_dir=current_app.config[CONFIGFILE_KEY_DATA_DIR]
+    wiki_name=current_app.config[CONFIGFILE_KEY_WIKI_NAME]
+    start_site=current_app.config[CONFIGFILE_KEY_START_SITE]
 
     # Wurde eine Dateiendung mit angegeben?
-    if path.endswith(magic.MARKDOWN_FILE_EXTENSION):
+    if path.endswith(MARKDOWN_FILE_EXTENSION):
         return redirect(url_for('pages_view.home')+os.path.splitext(path)[0])
 
     if path != 'home':
         full_path = os.path.join(data_dir, path)
 
-        if os.path.isfile(full_path + magic.MARKDOWN_FILE_EXTENSION):
+        if os.path.isfile(full_path + MARKDOWN_FILE_EXTENSION):
             navi_element=all_endpoints.get('edit')
             navi_element['parameter'] = { 'path': path }
             navi_buttons.append(navi_element)
 
             try:
-                content = readMarkDown(full_path + magic.MARKDOWN_FILE_EXTENSION)
+                content = readMarkDown(full_path + MARKDOWN_FILE_EXTENSION)
             except Exception as e:
                 return render_template('404.tmpl.html', navi=navi_buttons, wiki_name=wiki_name)
 
