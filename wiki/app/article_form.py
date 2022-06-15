@@ -6,7 +6,7 @@ from wiki.constants import *
 
 class ArticleForm(FlaskForm):
     path = StringField(lazy_gettext(LBL_PATH), render_kw={"size": 45})
-    comment = StringField(lazy_gettext(LBL_COMMENT), render_kw={"size": 40})
+    comment = StringField(lazy_gettext(LBL_COMMENT), render_kw={"size": 45})
 
     save = SubmitField(lazy_gettext(LBL_SAVE))
     cancel = SubmitField(lazy_gettext(LBL_CANCEL))
