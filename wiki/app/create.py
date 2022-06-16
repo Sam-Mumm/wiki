@@ -34,7 +34,7 @@ def create(path):
     else:
         form.path.data = path + os.path.sep
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)
+    return render_template(TEMPLATE_ARTICLE_FORM, form=form, navi=navi_buttons, wiki_name=wiki_name)
 
 
 def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
@@ -58,7 +58,7 @@ def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
     except Exception as e:
         form.article_content.data = form_content
         form.path.data = form_path
-        return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name,
+        return render_template(TEMPLATE_ARTICLE_FORM, form=form, navi=navi_buttons, wiki_name=wiki_name,
                                error=str(e))
 
 #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt

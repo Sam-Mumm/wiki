@@ -41,7 +41,7 @@ def load_form_data(data_dir, form, navi_buttons, path, start_site, wiki_name):
         article_file = os.path.join(data_dir, path + MARKDOWN_FILE_EXTENSION)
 
         if not os.path.isfile(article_file):
-            return render_template('404.tmpl.html', wiki_name=wiki_name)
+            return render_template(TEMPLATE_ARTICLE_NOT_FOUND, wiki_name=wiki_name)
 
         form.path.data = path
 
@@ -61,7 +61,7 @@ def load_form_data(data_dir, form, navi_buttons, path, start_site, wiki_name):
                 flash(str(e))
                 return redirect(url_for('pages_view.home'))
 
-    return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name)
+    return render_template(TEMPLATE_ARTICLE_FORM, form=form, navi=navi_buttons, wiki_name=wiki_name)
 
 
 def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
@@ -84,7 +84,7 @@ def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
     except Exception as e:
         form.article_content.data = form_content
         form.path.data = form_path
-        return render_template('article_form.tmpl.html', form=form, navi=navi_buttons, wiki_name=wiki_name,
+        return render_template(TEMPLATE_ARTICLE_FORM, form=form, navi=navi_buttons, wiki_name=wiki_name,
                                error=str(e))
 
     #        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt

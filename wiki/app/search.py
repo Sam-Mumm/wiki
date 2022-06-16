@@ -38,10 +38,10 @@ def search():
 
     if request.method != HTTP_REQUEST_METHOD_POST:
         msg = _(MSG_NO_SEARCH_PHRASE)
-        return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
+        return render_template(TEMPLATE_SEARCH_RESULTS, search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
 
     search_str = request.form['search']
 
     msg, results = search_index(search_str, index_dir, data_dir)
 
-    return render_template('search_results.tmpl.html', search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
+    return render_template(TEMPLATE_SEARCH_RESULTS, search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)

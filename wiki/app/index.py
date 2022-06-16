@@ -53,13 +53,13 @@ def index(path):
         # Existiert das in der URL referenzierte Verzeichnis im Daten-Verzeichnis
         if os.path.isdir(full_path):
             content = list_dir(data_dir, path)
-            return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content, navi=navi_buttons)
+            return render_template(TEMPLATE_TABLE, wiki_name=wiki_name, content=content, navi=navi_buttons)
         # Referenziert der Eintrag in der URL auf eine Datei auf root-Ebene?
         elif os.path.isfile(full_path + MARKDOWN_FILE_EXTENSION):
             return redirect(url_for('pages_view.home', path=path))
         else:
-            return render_template('404.tmpl.html')
+            return render_template(TEMPLATE_ARTICLE_NOT_FOUND)
 
     else:
         content = list_dir(data_dir, '')
-        return render_template('table_content.tmpl.html', wiki_name=wiki_name, content=content, navi=navi_buttons)
+        return render_template(TEMPLATE_TABLE, wiki_name=wiki_name, content=content, navi=navi_buttons)
