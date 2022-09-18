@@ -3,7 +3,7 @@ from flask_babel import _
 from ..utils.whoosh_search import search_index, create_index
 import os
 from wiki.constants import *
-from wiki.config import all_endpoints
+from wiki.config import all_endpoints, get_config_settings
 
 pages_search = Blueprint("pages_search", __name__, template_folder='templates')
 
@@ -29,19 +29,27 @@ def index_refresh():
 @pages_search.route('/search', methods=["POST", "GET"])
 def search():
     results = []
-    index_dir = current_app.config[CONFIGFILE_KEY_INDEX_DIR]
-    data_dir = current_app.config[CONFIGFILE_KEY_DATA_DIR]
-    wiki_name = current_app.config[CONFIGFILE_KEY_WIKI_NAME]
+
+    ca_config=get_config_settings(current_app)
 
     # Which Buttons should shown? (Create, Index)
     navi_buttons = [all_endpoints.get('index'), all_endpoints.get('create')]
 
     if request.method != HTTP_REQUEST_METHOD_POST:
-        msg = _(MSG_NO_SEARCH_PHRASE)
-        return render_template(TEMPLATE_SEARCH_RESULTS, search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
+        return render_template(TEMPLATE_SEARCH_RESULTS,
+                               search_msg=_(MSG_NO_SEARCH_PHRASE),
+                               results=results,
+                               navi=navi_buttons,
+                               wiki_name=ca_config[CONFIGFILE_KEY_WIKI_NAME])
 
     search_str = request.form['search']
 
-    msg, results = search_index(search_str, index_dir, data_dir)
+    msg, results = search_index(search_str,
+                                ca_config[CONFIGFILE_KEY_INDEX_DIR],
+                                ca_config[CONFIGFILE_KEY_DATA_DIR])
 
-    return render_template(TEMPLATE_SEARCH_RESULTS, search_msg=msg, results=results, navi=navi_buttons, wiki_name=wiki_name)
+    return render_template(TEMPLATE_SEARCH_RESULTS,
+                           search_msg=msg,
+                           results=results,
+                           navi=navi_buttons,
+                           wiki_name=ca_config[CONFIGFILE_KEY_WIKI_NAME])

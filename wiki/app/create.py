@@ -4,7 +4,7 @@ from .article_form import ArticleForm
 from ..utils.whoosh_search import add_document_index
 import os
 from wiki.constants import *
-from wiki.config import all_endpoints
+from wiki.config import all_endpoints, get_config_settings
 
 pages_create = Blueprint("pages_create", __name__, template_folder='templates')
 
@@ -12,12 +12,9 @@ pages_create = Blueprint("pages_create", __name__, template_folder='templates')
 @pages_create.route('/create', defaults={'path': ''}, methods=["GET","POST"])
 @pages_create.route('/create/<path:path>', methods=["GET","POST"])
 def create(path):
-    data_dir = current_app.config[CONFIGFILE_KEY_DATA_DIR]
-    index_dir = current_app.config[CONFIGFILE_KEY_INDEX_DIR]
-    start_site = current_app.config[CONFIGFILE_KEY_START_SITE]
-    wiki_name = current_app.config[CONFIGFILE_KEY_WIKI_NAME]
+    ca_config=get_config_settings(current_app)
 
-    start_site_full_path = os.path.join(data_dir, start_site)
+    start_site_full_path = os.path.join(ca_config[CONFIGFILE_KEY_DATA_DIR], ca_config[CONFIGFILE_KEY_START_SITE])
 
     form = ArticleForm()
 
@@ -25,7 +22,11 @@ def create(path):
     navi_buttons = [all_endpoints.get('index')]
 
     if request.method == HTTP_REQUEST_METHOD_POST:
-        return form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name)
+        return form_processing(ca_config[CONFIGFILE_KEY_DATA_DIR],
+                               form,
+                               ca_config[CONFIGFILE_KEY_INDEX_DIR],
+                               navi_buttons, path,
+                               ca_config[CONFIGFILE_KEY_WIKI_NAME])
 
     if path == "home" and not os.path.isfile(start_site_full_path):
         form.path.data = "home"
@@ -60,8 +61,6 @@ def form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name):
         form.path.data = form_path
         return render_template(TEMPLATE_ARTICLE_FORM, form=form, navi=navi_buttons, wiki_name=wiki_name,
                                error=str(e))
-
-#        form_comment = request.form['comment']     -> wird erst fuer die Commit Message benoetigt
 
     article_fullpath = os.path.join(data_dir, form_path + MARKDOWN_FILE_EXTENSION)
 

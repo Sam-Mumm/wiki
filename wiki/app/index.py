@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, current_app, redirect, url_for
 import os
 from datetime import datetime
 from wiki.constants import *
-from wiki.config import all_endpoints
+from wiki.config import all_endpoints, get_config_settings
 
 pages_index = Blueprint("pages_index", __name__)
 
@@ -44,16 +44,15 @@ def index(path):
     navi_element['parameter'] = {'path': path}
     navi_buttons = [navi_element]
 
-    data_dir=current_app.config[CONFIGFILE_KEY_DATA_DIR]
-    wiki_name=current_app.config[CONFIGFILE_KEY_WIKI_NAME]
+    ca_config = get_config_settings(current_app)
 
-    full_path = os.path.join(data_dir, path)
+    full_path = os.path.join(ca_config[CONFIGFILE_KEY_DATA_DIR], path)
 
     if path:
         # Existiert das in der URL referenzierte Verzeichnis im Daten-Verzeichnis
         if os.path.isdir(full_path):
-            content = list_dir(data_dir, path)
-            return render_template(TEMPLATE_TABLE, wiki_name=wiki_name, content=content, navi=navi_buttons)
+            content = list_dir(ca_config[CONFIGFILE_KEY_DATA_DIR], path)
+            return render_template(TEMPLATE_TABLE, wiki_name=ca_config[CONFIGFILE_KEY_WIKI_NAME], content=content, navi=navi_buttons)
         # Referenziert der Eintrag in der URL auf eine Datei auf root-Ebene?
         elif os.path.isfile(full_path + MARKDOWN_FILE_EXTENSION):
             return redirect(url_for('pages_view.home', path=path))
@@ -61,5 +60,5 @@ def index(path):
             return render_template(TEMPLATE_ARTICLE_NOT_FOUND)
 
     else:
-        content = list_dir(data_dir, '')
-        return render_template(TEMPLATE_TABLE, wiki_name=wiki_name, content=content, navi=navi_buttons)
+        content = list_dir(ca_config[CONFIGFILE_KEY_DATA_DIR], '')
+        return render_template(TEMPLATE_TABLE, wiki_name=ca_config[CONFIGFILE_KEY_WIKI_NAME], content=content, navi=navi_buttons)

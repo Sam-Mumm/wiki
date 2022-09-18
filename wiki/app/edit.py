@@ -5,18 +5,14 @@ from ..utils.file_io import readRaw, updateArticle, moveArticle
 from ..utils.whoosh_search import update_document_index
 import os
 from wiki.constants import *
-from wiki.config import all_endpoints
+from wiki.config import all_endpoints, get_config_settings
 
 pages_edit = Blueprint("pages_edit", __name__, template_folder='templates')
 
 @pages_edit.route('/edit', defaults={'path': 'home'}, methods=["GET","POST"])
 @pages_edit.route('/edit/<path:path>', methods=["GET","POST"])
 def edit(path):
-    # Holen der Einstellungen aus der settings.py
-    data_dir = current_app.config[CONFIGFILE_KEY_DATA_DIR]
-    index_dir = current_app.config[CONFIGFILE_KEY_INDEX_DIR]
-    start_site = current_app.config[CONFIGFILE_KEY_START_SITE]
-    wiki_name = current_app.config[CONFIGFILE_KEY_WIKI_NAME]
+    ca_config=get_config_settings(current_app)
 
     form = ArticleForm()
 
@@ -28,9 +24,16 @@ def edit(path):
 
     # Wurde der Speicher-Button gedrueckt?
     if request.method == HTTP_REQUEST_METHOD_POST:
-        return form_processing(data_dir, form, index_dir, navi_buttons, path, wiki_name)
+        return form_processing(ca_config[CONFIGFILE_KEY_DATA_DIR],
+                               form,
+                               ca_config[CONFIGFILE_KEY_INDEX_DIR],
+                               navi_buttons, path,
+                               ca_config[CONFIGFILE_KEY_WIKI_NAME])
 
-    return load_form_data(data_dir, form, navi_buttons, path, start_site, wiki_name)
+    return load_form_data(ca_config[CONFIGFILE_KEY_DATA_DIR], form,
+                          navi_buttons, path,
+                          ca_config[CONFIGFILE_KEY_START_SITE],
+                          ca_config[CONFIGFILE_KEY_WIKI_NAME])
 
 
 def load_form_data(data_dir, form, navi_buttons, path, start_site, wiki_name):
