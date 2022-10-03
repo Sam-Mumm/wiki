@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, current_app, redirect, url_for, flash
+from flask import Blueprint, render_template, current_app, redirect, url_for, flash, jsonify
 from flask_babel import _
 import os
-from ..utils.file_io import readMarkDown
+from ..utils.file_io import readArticle
+from ..utils.utils import markdown2html
 from wiki.constants import *
 from wiki.config import all_endpoints, get_config_settings
 
@@ -13,48 +14,75 @@ pages_view = Blueprint("pages_view", __name__, template_folder='templates')
 def home(path):
     # Which Buttons should shown? (Create, Index)
     navi_element = all_endpoints.get('create')
-    navi_element['parameter'] = {'path': path}
-
-    navi_buttons = [all_endpoints.get('index'), navi_element]
+    navi_element['parameter'] = {'path': os.path.dirname(path)}
 
     ca_config=get_config_settings(current_app)
 
     # Wurde eine Dateiendung mit angegeben?
     if path.endswith(MARKDOWN_FILE_EXTENSION):
         return redirect(url_for('pages_view.home')+os.path.splitext(path)[0])
+    try:
+        if path == 'home':
+            navi_element['parameter'] = {'path': path}
 
-    if path == 'home':
-        return load_startsite(ca_config[CONFIGFILE_KEY_DATA_DIR],
-                              navi_buttons,
-                              ca_config[CONFIGFILE_KEY_START_SITE],
-                              ca_config[CONFIGFILE_KEY_WIKI_NAME])
-    else:
-        return load_article(ca_config[CONFIGFILE_KEY_DATA_DIR],
-                            navi_buttons,
-                            ca_config[CONFIGFILE_KEY_START_SITE],
-                            ca_config[CONFIGFILE_KEY_WIKI_NAME])
+            status, content = load_startsite(ca_config[CONFIGFILE_KEY_DATA_DIR],
+                                                 ca_config[CONFIGFILE_KEY_START_SITE])
+        else:
+            navi_element['parameter'] = {'path': os.path.dirname(path)}
+            status, content = load_article(ca_config[CONFIGFILE_KEY_DATA_DIR], path)
+    except Exception as e:
+        navi_buttons = [all_endpoints.get('index'), navi_element]
+
+        return render_template(TEMPLATE_ARTICLE_NOT_FOUND,
+                               navi=navi_buttons,
+                               wiki_name=ca_config[CONFIGFILE_KEY_WIKI_NAME])
+
+    navi_buttons = [all_endpoints.get('index'), navi_element]
+
+    return render_template(TEMPLATE_ARTICLE_CONTENT_MARKDOWN,
+                           content=markdown2html(content),
+                           navi=navi_buttons,
+                           wiki_name=ca_config[CONFIGFILE_KEY_WIKI_NAME])
 
 
-def load_article(data_dir, navi_buttons, path, wiki_name):
+@pages_view.route('/rest/content', defaults={'path': 'home'})
+@pages_view.route('/rest/content/<path:path>')
+def rest_home(path):
+    ca_config = get_config_settings(current_app)
+
+    # Wurde eine Dateiendung mit angegeben?
+    if path.endswith(MARKDOWN_FILE_EXTENSION):
+        return redirect(url_for('pages_view.home/rest/content') + os.path.splitext(path)[0])
+
+    try:
+        if path == 'home':
+            status, content = load_startsite(ca_config[CONFIGFILE_KEY_DATA_DIR],
+                                             ca_config[CONFIGFILE_KEY_START_SITE])
+        else:
+            status, content = load_article(ca_config[CONFIGFILE_KEY_DATA_DIR], path)
+    except Exception as e:
+        return jsonify(status="404", content=_(JSON_PAGE_NOT_FOUND))
+
+    return jsonify(status=status, content=content)
+
+
+def load_article(data_dir, path):
     full_path = os.path.join(data_dir, path)
+
     if os.path.isfile(full_path + MARKDOWN_FILE_EXTENSION):
-        navi_element = all_endpoints.get('edit')
-        navi_element['parameter'] = {'path': path}
-        navi_buttons.append(navi_element)
-
         try:
-            content = readMarkDown(full_path + MARKDOWN_FILE_EXTENSION)
+            content = readArticle(full_path + MARKDOWN_FILE_EXTENSION)
         except Exception as e:
-            return render_template(TEMPLATE_ARTICLE_NOT_FOUND, navi=navi_buttons, wiki_name=wiki_name)
-
-        return render_template(TEMPLATE_ARTICLE_CONTENT_MARKDOWN, content=content, navi=navi_buttons, wiki_name=wiki_name)
+            raise FileNotFoundError()
     elif os.path.isdir(full_path):
         return redirect(url_for('pages_index.index', path=path))
     else:
-        return render_template(TEMPLATE_ARTICLE_NOT_FOUND, navi=navi_buttons, wiki_name=wiki_name)
+        raise FileNotFoundError()
+
+    return 200, content
 
 
-def load_startsite(data_dir, navi_buttons, start_site, wiki_name):
+def load_startsite(data_dir, start_site):
     start_site_full_path = os.path.join(data_dir, start_site)
 
     # TODO: Durch sinnvollen Text (externe Datei?) ersetzen
@@ -62,8 +90,9 @@ def load_startsite(data_dir, navi_buttons, start_site, wiki_name):
 
     if os.path.exists(start_site_full_path):
         try:
-            content = readMarkDown(start_site_full_path)
+            content = readArticle(start_site_full_path)
         except Exception as e:
             flash(str(e))
-    return render_template(TEMPLATE_ARTICLE_CONTENT_MARKDOWN, content=content, navi=navi_buttons, wiki_name=wiki_name)
+
+    return 200, content
 

@@ -1,19 +1,10 @@
 from flask_babel import _
-import markdown2
 import codecs
 import os
 from wiki.constants import *
 
-# Auslesen eines Artikels (=Datei) einschliesslich Markdown-Parsing
-def readMarkDown(path):
-    try:
-        return markdown2.markdown_path(path, extras=["tables", "fenced-code-blocks", "break-on-newline"])
-    except:
-        raise PermissionError(_(MSG_NO_READ_PERMISSION))
-
-
 # Auslesen eines Artikels (=Datei) ohne Parsing
-def readRaw(path):
+def readArticle(path):
     try:
         with codecs.open(path, 'r', 'utf-8') as fh:
             content = fh.read()

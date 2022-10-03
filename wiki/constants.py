@@ -46,3 +46,5 @@ TEMPLATE_ARTICLE_NOT_FOUND = '404.tmpl.html'
 TEMPLATE_TABLE = 'table_content.tmpl.html'
 TEMPLATE_SEARCH_RESULTS = 'search_results.tmpl.html'
 TEMPLATE_ARTICLE_CONTENT_MARKDOWN = 'markdown_content.tmpl.html'
+
+JSON_PAGE_NOT_FOUND="Seite nicht gefunden"
