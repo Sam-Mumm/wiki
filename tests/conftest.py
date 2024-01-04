@@ -16,7 +16,7 @@ def temp_datadir():
 def app(request, temp_datadir):
     app = create_app()
 
-    create_testdata(app, temp_datadir, data_structure)
+    create_testdata(app, temp_datadir)
 
     app.config['DATA_DIR']=temp_datadir
 
@@ -30,19 +30,21 @@ def client(request, app):
     return client
 
 
-
 @pytest.fixture(scope="session")
 def data_structure():
-    return "foo"
+    return read_file()
+
+
+def read_file():
+    with open("./data.json", "r") as f:
+        return json.load(f)
 
 
 # Generieren von Testdaten basierend auf data.json
-def create_testdata(app, temp_datadir, data_structure):
+def create_testdata(app, temp_datadir):
+
+    print(read_file())
     # Anlegen der Startseite
-
-    j = data_structure
-    print(j)
-
     start_site="{}/{}{}".format(temp_datadir, app.config['START_SITE'], MARKDOWN_FILE_EXTENSION)
     with open(start_site, "w") as f:
         f.write("# Startseite fuer Testdaten\n")
