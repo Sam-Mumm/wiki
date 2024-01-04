@@ -1,0 +1,12 @@
+[
+    {
+        "path": "/",
+        "filename": "foobar.md",
+        "content": "Testfile"
+    },
+    {
+        "path": "subfolder",
+        "filename": "gnarf",
+        "content": "Lorem ipsum"
+    }
+]
