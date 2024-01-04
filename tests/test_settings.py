@@ -8,7 +8,7 @@ DATA_DIR = os.path.join(BASE_DIR, "static/data")
 
 INDEX_DIR = os.path.join(BASE_DIR, "static/index")
 
-START_SITE = "README.md"
+START_SITE = "README"
 
 GIT_SUPPORT=False
 
