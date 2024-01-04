@@ -16,7 +16,7 @@ def temp_datadir():
 def app(request, temp_datadir):
     app = create_app()
 
-    create_testdata(app, temp_datadir)
+    create_testdata(app, temp_datadir, data_structure)
 
     app.config['DATA_DIR']=temp_datadir
 
@@ -41,9 +41,9 @@ def read_file():
 
 
 # Generieren von Testdaten basierend auf data.json
-def create_testdata(app, temp_datadir):
+def create_testdata(app, temp_datadir, data_structure):
 
-    print(read_file())
+    print(data_structure)
     # Anlegen der Startseite
     start_site="{}/{}{}".format(temp_datadir, app.config['START_SITE'], MARKDOWN_FILE_EXTENSION)
     with open(start_site, "w") as f:
