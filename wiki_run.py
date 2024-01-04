@@ -3,9 +3,19 @@ from wiki import create_app
 from pathlib import Path
 import argparse
 import os
+from wiki.utils.whoosh_search import create_index
+from wiki.constants import *
 
 def start_app():
     wiki=create_app()
+
+    try:
+        create_index(wiki.config[CONFIGFILE_KEY_INDEX_DIR],
+                     wiki.config[CONFIGFILE_KEY_DATA_DIR])
+    except Exception as e:
+        str(str(e))
+        exit(1)
+
     wiki.run()
 
 def setup_dialog():

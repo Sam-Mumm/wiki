@@ -9,8 +9,20 @@ from flask_babel import _
 from wiki.constants import *
 
 # Erstellt von data_dir einen neuen Index in index_dir.
-# Liefert True zurueck wenn die indizierung erfolgreich war
+# Liefert True zurueck, falls die indizierung erfolgreich war
 def create_index(index_dir, data_dir):
+    if not os.path.isdir(index_dir):
+        try:
+            os.makedirs(index_dir)
+        except:
+            raise PermissionError(_(MSG_INDEX_DIR_CANNOT_BE_CREATED))
+
+    if not os.path.isdir(os.path.abspath(data_dir)):
+        try:
+            os.makedirs(os.path.abspath(data_dir))
+        except:
+            raise PermissionError(_(MSG_DATA_DIR_CANNOT_BE_CREATED))
+
     schema = Schema(path=ID(stored=True, unique=True), content=TEXT(stored=True))
 
     storage_obj = FileStorage(index_dir)
@@ -67,20 +79,14 @@ def search_index(search_str, index_dir, data_dir):
 
     results.fragmenter = whoosh.highlight.ContextFragmenter(surround=20)
 
-    if len(results) == 0:
-        msg = _(MSG_NO_SEARCH_RESULTS).format(search_str)
-        return msg, result_set
-
-    msg = _(MSG_SEARCH_RESULTS).format(count_hits=str(len(results)), search_str=search_str)
-    for r in  results:
+    for r in results:
         hit = {}
 
-#        hit['path'] = "/".join(os.path.normpath(r['path']).split(os.path.sep)[3:])
         hit['path'] = r['path']
-        hit['content'] = r.highlights("content")
+#        hit['content'] = r.highlights("content")
         result_set.append(hit)
 
-    return msg, result_set
+    return len(results), result_set
 
 
 def add_document_index(index_dir, data_dir, path, content):
@@ -99,7 +105,7 @@ def add_document_index(index_dir, data_dir, path, content):
     return True
 
 
-def update_document_index(index_dir, data_dir, origin_path, new_path, content):
+def update_document_index(index_dir, data_dir, path, content):
     index_dir_absolute = os.path.abspath(index_dir)
     storage_obj = FileStorage(index_dir_absolute)
 
@@ -111,10 +117,5 @@ def update_document_index(index_dir, data_dir, origin_path, new_path, content):
 
     writer = idx.writer()
 
-    # Wurde die Datei verschoben?
-    if origin_path == new_path:
-        writer.update_document(path=new_path, content=content)
-    else:
-        writer.delete_by_term('path', origin_path)
-        writer.add_document(path=new_path, content=content)
+    writer.update_document(path=path, content=content)
     writer.commit()

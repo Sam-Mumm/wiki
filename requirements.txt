@@ -1,5 +1,5 @@
-flask==2.0.1
-Flask-WTF==0.15.1
-Flask-Babel==2.0.0
+Flask==3.0.0
+flask-babel==4.0.0
+Werkzeug==3.0.1
 Whoosh==2.7.4
-markdown2==2.4.1
+Babel==2.14.0
