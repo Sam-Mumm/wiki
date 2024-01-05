@@ -44,7 +44,7 @@ def create_testdata(app, temp_datadir, data_structure):
     with open(start_site, "w") as f:
         f.write("# Startseite fuer Testdaten\n")
 
-    for e in data_structure:
+    for e in data_structure['structure']:
         dir_path="{}/{}".format(temp_datadir, e['path'])
         os.makedirs(dir_path, exist_ok=True)
 
