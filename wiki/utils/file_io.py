@@ -9,8 +9,8 @@ def readArticle(path):
     try:
         with codecs.open(path, 'r', 'utf-8') as fh:
             content = fh.read()
-    except:
-        raise PermissionError(_(MSG_NO_READ_PERMISSION))
+    except Exception as e:
+        raise Exception(404, _(MSG_PAGE_NOT_FOUND))
 
     return content
 

@@ -4,6 +4,11 @@
          "path": "",
          "filename": "lorumipsum.md",
          "content": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat"
+      },
+      {
+         "path": "/foo",
+         "filename": "bar.md",
+         "content": "Cada vez que me trabo Félix paga un whisky añejo"
       }
    ],
    "view": [
@@ -17,6 +22,51 @@
                "content": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat"
             }
          }
+      },
+      {
+         "context": "/lorumipsum.md",
+         "method": "GET",
+         "response": {
+            "statuscode": 200,
+            "json": {
+               "statuscode": 200,
+               "content": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat"
+            }
+         }
+      },
+      {
+         "context": "/notexisting",
+         "method": "GET",
+         "response": {
+            "statuscode": 404,
+            "json": {
+               "statuscode": 404,
+               "message": "Seite nicht gefunden"
+            }
+         }
+      },
+      {
+         "context": "/foo/bar",
+         "method": "GET",
+         "response": {
+            "statuscode": 200,
+            "json": {
+               "statuscode": 200,
+               "content": "Cada vez que me trabo Félix paga un whisky añejo"
+            }
+         }
+      },
+      {
+         "context": "/foo",
+         "method": "GET",
+         "response": {
+            "statuscode": 404,
+            "json": {
+               "statuscode": 404,
+               "message": "Seite nicht gefunden"
+            }
+         }
       }
+
    ]
 }
